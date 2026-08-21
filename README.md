@@ -160,7 +160,7 @@ lib/
 If you simply want to install and use Bunk Mitra on your Android device:
 
 1. Go to the **[Latest GitHub Releases](https://github.com/imscaryclown/bunk-mitra/releases/latest)** page.
-2. Download the latest `app-release.apk` (or `bunk-mitra.apk`).
+2. Download the latest `bunk-mitra.apk`.
 3. Tap on the downloaded file on your Android device to install. *(If prompted, allow "Install from unknown sources" in settings)*.
 4. Open the app, set up your schedule or snap a picture with AI, and you're good to go! 🎉
 
