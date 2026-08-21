@@ -6,7 +6,7 @@ import '../../../core/constants/colors.dart';
 import '../../../core/utils/attendance_math.dart';
 import '../../../services/providers.dart';
 import '../../../models/subject.dart';
-import '../../../widgets/bunk_app_bar.dart';
+import '../../../widgets/header_icon_button.dart';
 import '../../../widgets/page_header.dart';
 
 class CalculatorScreen extends ConsumerStatefulWidget {
@@ -63,25 +63,32 @@ class _CalculatorScreenState extends ConsumerState<CalculatorScreen> {
         : null;
 
     return Scaffold(
-      appBar: const BunkAppBar(showBackButton: true),
       body: SafeArea(
-        child: subjects.isEmpty
-            ? _buildEmptyState()
-            : ListView(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 20.0,
-                  vertical: 16.0,
-                ),
-                children: [
-                  // ===== 1. Page Header =====
-                  const PageHeader(
-                    title: 'Bunk Calculator',
-                    subtitle:
-                        'Simulate how bunking or attending affects your %.',
-                    padding: EdgeInsets.only(bottom: 24.0),
-                  ),
+        child: ListView(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 20.0,
+            vertical: 16.0,
+          ),
+          children: [
+            // ===== 1. Page Header =====
+            PageHeader(
+              title: 'Bunk Calculator',
+              subtitle:
+                  'Simulate how bunking or attending affects your %.',
+              padding: const EdgeInsets.only(bottom: 24.0),
+              trailing: Navigator.canPop(context)
+                  ? HeaderIconButton(
+                      icon: Icons.arrow_back_ios_new_rounded,
+                      tooltip: 'Back',
+                      onTap: () => Navigator.maybePop(context),
+                    )
+                  : null,
+            ),
 
-                  // ===== 2. Subject Chips Selector Strip =====
+            if (subjects.isEmpty)
+              _buildEmptyState()
+            else ...[
+              // ===== 2. Subject Chips Selector Strip =====
                   const Row(
                     children: [
                       Icon(
@@ -220,41 +227,45 @@ class _CalculatorScreenState extends ConsumerState<CalculatorScreen> {
                     _buildScenariosBlock(),
                   ],
                 ],
-              ),
+              ],
+            ),
       ),
     );
   }
 
   Widget _buildEmptyState() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            width: 72,
-            height: 72,
-            decoration: BoxDecoration(
-              color: const Color(0x13EDFF00),
-              borderRadius: BorderRadius.circular(16),
+    return Padding(
+      padding: const EdgeInsets.only(top: 48.0),
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              width: 72,
+              height: 72,
+              decoration: BoxDecoration(
+                color: const Color(0x13EDFF00),
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: const Icon(
+                Icons.menu_book,
+                color: Color(0xFF00505F),
+                size: 36,
+              ),
             ),
-            child: const Icon(
-              Icons.menu_book,
-              color: Color(0xFF00505F),
-              size: 36,
+            const SizedBox(height: 16),
+            const Text(
+              'No Subjects Yet',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
             ),
-          ),
-          const SizedBox(height: 16),
-          const Text(
-            'No Subjects Yet',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-          ),
-          const SizedBox(height: 6),
-          const Text(
-            'Add subjects first to use the simulator.',
-            style: TextStyle(color: AppColors.outlineLight, fontSize: 12),
-          ),
-        ],
-      ).animate().fade(duration: 400.ms),
+            const SizedBox(height: 6),
+            const Text(
+              'Add subjects first to use the simulator.',
+              style: TextStyle(color: AppColors.outlineLight, fontSize: 12),
+            ),
+          ],
+        ).animate().fade(duration: 400.ms),
+      ),
     );
   }
 

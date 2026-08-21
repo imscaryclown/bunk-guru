@@ -24,7 +24,7 @@ class Profile {
       email: json['email'] ?? '',
       department: json['department'] ?? '',
       university: json['university'] ?? 'Galgotias University',
-      year: json['year'] ?? '2nd Year',
+      year: json['year'] ?? '1st Year',
       avatarUrl: json['avatar_url'] ?? '',
     );
   }
