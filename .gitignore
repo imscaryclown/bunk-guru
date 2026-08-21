@@ -52,7 +52,12 @@ app.*.map.json
 .env.*
 !.env.example
 
-# Scratch / Test files
+# Scratch / Documentation / Config files
+features.md
+shorebird.yaml
+analysis_options.yaml
+devtools_options.yaml
 test_*.dart
 models.json
+
 
