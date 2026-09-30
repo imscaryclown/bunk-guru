@@ -191,7 +191,7 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
               style: const TextStyle(
                 color: Colors.white,
                 fontSize: 13,
-                fontWeight: FontWeight.bold,
+                fontWeight: FontWeight.w600,
               ),
             ),
           );
@@ -212,7 +212,7 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
             'Check-in History',
             style: TextStyle(
               color: Colors.white,
-              fontWeight: FontWeight.w600,
+              fontWeight: FontWeight.w500,
               fontSize: 24,
               fontFamily: 'Inter',
             ),
@@ -284,7 +284,7 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
           const SizedBox(height: 16),
           const Text(
             'No History Yet',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+            style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
           ),
           const SizedBox(height: 6),
           const Text(
@@ -380,7 +380,7 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
                         Text(
                           dateLabel.toUpperCase(),
                           style: const TextStyle(
-                            fontWeight: FontWeight.bold,
+                            fontWeight: FontWeight.w600,
                             fontSize: 13,
                             letterSpacing: 0.5,
                           ),
@@ -391,7 +391,7 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
                           style: const TextStyle(
                             color: AppColors.outlineLight,
                             fontSize: 10,
-                            fontWeight: FontWeight.bold,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
                       ],
@@ -544,7 +544,7 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
                         Text(
                           subject.name,
                           style: const TextStyle(
-                            fontWeight: FontWeight.bold,
+                            fontWeight: FontWeight.w600,
                             fontSize: 13.5,
                           ),
                           maxLines: 1,
@@ -564,7 +564,7 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
                               style: const TextStyle(
                                 color: AppColors.outlineLight,
                                 fontSize: 9.5,
-                                fontWeight: FontWeight.bold,
+                                fontWeight: FontWeight.w600,
                               ),
                             ),
                           ],
@@ -593,7 +593,7 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
                           statusLabel.toUpperCase(),
                           style: TextStyle(
                             color: statusColor,
-                            fontWeight: FontWeight.bold,
+                            fontWeight: FontWeight.w600,
                             fontSize: 8.5,
                             letterSpacing: 0.2,
                           ),
@@ -663,7 +663,7 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
                 subject.name,
                 style: const TextStyle(
                   fontSize: 18,
-                  fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
               const SizedBox(height: 4),
@@ -672,7 +672,7 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
                 style: const TextStyle(
                   color: AppColors.outlineLight,
                   fontSize: 12,
-                  fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
               const SizedBox(height: 20),
@@ -778,7 +778,7 @@ class _HistoryScreenState extends ConsumerState<HistoryScreen> {
             Text(
               label,
               style: TextStyle(
-                fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
                 color: isSelected
                     ? activeColor
                     : (isDark

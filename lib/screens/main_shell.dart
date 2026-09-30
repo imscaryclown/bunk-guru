@@ -142,7 +142,7 @@ class _MainShellState extends ConsumerState<MainShell> with WidgetsBindingObserv
                           item['label'] as String,
                           style: TextStyle(
                             fontSize: 8.5,
-                            fontWeight: FontWeight.w600,
+                            fontWeight: FontWeight.w500,
                             letterSpacing: 0.2,
                             color: isActive
                                 ? (isDark

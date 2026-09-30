@@ -48,11 +48,7 @@ void main() async {
     debugPrint('Critical Error: NotificationService init failed: $e');
   }
 
-  runApp(
-    const ProviderScope(
-      child: MyApp(),
-    ),
-  );
+  runApp(const ProviderScope(child: MyApp()));
 }
 
 class MyApp extends ConsumerWidget {
@@ -69,7 +65,8 @@ class MyApp extends ConsumerWidget {
       initialLocation: authUser != null ? '/home' : '/login',
       redirect: (context, state) {
         final bool loggedIn = authUser != null;
-        final bool onAuthPath = state.matchedLocation == '/login' ||
+        final bool onAuthPath =
+            state.matchedLocation == '/login' ||
             state.matchedLocation == '/signup' ||
             state.matchedLocation == '/forgot-password';
 
@@ -82,14 +79,8 @@ class MyApp extends ConsumerWidget {
         return null;
       },
       routes: [
-        GoRoute(
-          path: '/',
-          redirect: (_, __) => '/home',
-        ),
-        GoRoute(
-          path: '/home',
-          builder: (context, state) => const MainShell(),
-        ),
+        GoRoute(path: '/', redirect: (_, _) => '/home'),
+        GoRoute(path: '/home', builder: (context, state) => const MainShell()),
         GoRoute(
           path: '/login',
           builder: (context, state) => const LoginScreen(),
@@ -117,7 +108,9 @@ class MyApp extends ConsumerWidget {
         GoRoute(
           path: '/review-timetable',
           builder: (context, state) {
-            return TimetableReviewScreen(slots: state.extra as List<dynamic>? ?? []);
+            return TimetableReviewScreen(
+              slots: state.extra as List<dynamic>? ?? [],
+            );
           },
         ),
         GoRoute(
@@ -127,7 +120,9 @@ class MyApp extends ConsumerWidget {
         GoRoute(
           path: '/review-subjects',
           builder: (context, state) {
-            return SubjectReviewScreen(subjects: state.extra as List<dynamic>? ?? []);
+            return SubjectReviewScreen(
+              subjects: state.extra as List<dynamic>? ?? [],
+            );
           },
         ),
       ],

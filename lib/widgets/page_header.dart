@@ -5,6 +5,7 @@ import '../core/constants/colors.dart';
 class PageHeader extends StatelessWidget {
   final String title;
   final String? subtitle;
+  final Widget? leading;
   final Widget? trailing;
   final EdgeInsetsGeometry padding;
 
@@ -12,6 +13,7 @@ class PageHeader extends StatelessWidget {
     super.key,
     required this.title,
     this.subtitle,
+    this.leading,
     this.trailing,
     this.padding = const EdgeInsets.fromLTRB(20.0, 16.0, 20.0, 12.0),
   });
@@ -25,6 +27,10 @@ class PageHeader extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
+          if (leading != null) ...[
+            leading!,
+            const SizedBox(width: 12),
+          ],
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -34,7 +40,7 @@ class PageHeader extends StatelessWidget {
                   title,
                   style: GoogleFonts.inter(
                     fontSize: 22,
-                    fontWeight: FontWeight.w600,
+                    fontWeight: FontWeight.w500,
                     letterSpacing: -0.3,
                     color: isDark ? AppColors.textMainDark : AppColors.textMainLight,
                   ),

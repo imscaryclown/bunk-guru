@@ -31,8 +31,14 @@ migrate_working_dir/
 .pub-cache/
 .pub/
 /build/
+build/
 /coverage/
+test/
 /test/
+
+# Kotlin / Gradle session caches
+**/.kotlin/
+.kotlin/
 
 # Symbolication related
 app.*.symbols

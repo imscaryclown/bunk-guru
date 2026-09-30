@@ -80,7 +80,7 @@ class BunkAppBar extends StatelessWidget implements PreferredSizeWidget {
               title,
               style: GoogleFonts.inter(
                 color: Colors.white,
-                fontWeight: FontWeight.w700,
+                fontWeight: FontWeight.w600,
                 fontSize: 22,
                 letterSpacing: -0.5,
               ),

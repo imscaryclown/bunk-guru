@@ -6,8 +6,6 @@ import '../../../core/constants/colors.dart';
 import '../../../core/utils/attendance_math.dart';
 import '../../../services/providers.dart';
 import '../../../models/subject.dart';
-import '../../../widgets/header_icon_button.dart';
-import '../../../widgets/page_header.dart';
 
 class CalculatorScreen extends ConsumerStatefulWidget {
   const CalculatorScreen({super.key});
@@ -63,6 +61,21 @@ class _CalculatorScreenState extends ConsumerState<CalculatorScreen> {
         : null;
 
     return Scaffold(
+      appBar: AppBar(
+        title: ShaderMask(
+          shaderCallback: (bounds) => const LinearGradient(
+            colors: [Color(0xFF4F46E5), Color(0xFFB4136D)],
+          ).createShader(bounds),
+          child: const Text(
+            'Bunk Calculator',
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.w500,
+              fontFamily: 'Inter',
+            ),
+          ),
+        ),
+      ),
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.symmetric(
@@ -70,21 +83,6 @@ class _CalculatorScreenState extends ConsumerState<CalculatorScreen> {
             vertical: 16.0,
           ),
           children: [
-            // ===== 1. Page Header =====
-            PageHeader(
-              title: 'Bunk Calculator',
-              subtitle:
-                  'Simulate how bunking or attending affects your %.',
-              padding: const EdgeInsets.only(bottom: 24.0),
-              trailing: Navigator.canPop(context)
-                  ? HeaderIconButton(
-                      icon: Icons.arrow_back_ios_new_rounded,
-                      tooltip: 'Back',
-                      onTap: () => Navigator.maybePop(context),
-                    )
-                  : null,
-            ),
-
             if (subjects.isEmpty)
               _buildEmptyState()
             else ...[
@@ -100,7 +98,7 @@ class _CalculatorScreenState extends ConsumerState<CalculatorScreen> {
                       Text(
                         'Select Subject',
                         style: TextStyle(
-                          fontWeight: FontWeight.bold,
+                          fontWeight: FontWeight.w600,
                           fontSize: 14,
                         ),
                       ),
@@ -184,7 +182,7 @@ class _CalculatorScreenState extends ConsumerState<CalculatorScreen> {
                                   s.name,
                                   style: TextStyle(
                                     fontSize: 12.5,
-                                    fontWeight: FontWeight.bold,
+                                    fontWeight: FontWeight.w600,
                                     color: isActive
                                         ? AppColors.primaryLight
                                         : (isDark
@@ -198,7 +196,7 @@ class _CalculatorScreenState extends ConsumerState<CalculatorScreen> {
                                   style: const TextStyle(
                                     color: AppColors.outlineLight,
                                     fontSize: 10,
-                                    fontWeight: FontWeight.bold,
+                                    fontWeight: FontWeight.w600,
                                   ),
                                 ),
                               ],
@@ -256,7 +254,7 @@ class _CalculatorScreenState extends ConsumerState<CalculatorScreen> {
             const SizedBox(height: 16),
             const Text(
               'No Subjects Yet',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+              style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
             ),
             const SizedBox(height: 6),
             const Text(
@@ -308,7 +306,7 @@ class _CalculatorScreenState extends ConsumerState<CalculatorScreen> {
                     Text(
                       s.name,
                       style: const TextStyle(
-                        fontWeight: FontWeight.bold,
+                        fontWeight: FontWeight.w600,
                         fontSize: 18,
                       ),
                     ),
@@ -318,7 +316,7 @@ class _CalculatorScreenState extends ConsumerState<CalculatorScreen> {
                       style: const TextStyle(
                         color: AppColors.outlineLight,
                         fontSize: 11,
-                        fontWeight: FontWeight.bold,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
                   ],
@@ -337,7 +335,7 @@ class _CalculatorScreenState extends ConsumerState<CalculatorScreen> {
                   '${pct.toStringAsFixed(1)}%',
                   style: TextStyle(
                     color: statusColor,
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.w600,
                     fontSize: 14,
                   ),
                 ),
@@ -364,7 +362,7 @@ class _CalculatorScreenState extends ConsumerState<CalculatorScreen> {
                       style: TextStyle(
                         color: AppColors.outlineLight,
                         fontSize: 9,
-                        fontWeight: FontWeight.bold,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
                     const SizedBox(height: 4),
@@ -372,7 +370,7 @@ class _CalculatorScreenState extends ConsumerState<CalculatorScreen> {
                       '$total',
                       style: const TextStyle(
                         fontSize: 18,
-                        fontWeight: FontWeight.bold,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
                   ],
@@ -393,7 +391,7 @@ class _CalculatorScreenState extends ConsumerState<CalculatorScreen> {
                       style: TextStyle(
                         color: AppColors.outlineLight,
                         fontSize: 9,
-                        fontWeight: FontWeight.bold,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
                     const SizedBox(height: 4),
@@ -401,7 +399,7 @@ class _CalculatorScreenState extends ConsumerState<CalculatorScreen> {
                       '$attended',
                       style: const TextStyle(
                         fontSize: 18,
-                        fontWeight: FontWeight.bold,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
                   ],
@@ -422,7 +420,7 @@ class _CalculatorScreenState extends ConsumerState<CalculatorScreen> {
                       style: TextStyle(
                         color: AppColors.outlineLight,
                         fontSize: 9,
-                        fontWeight: FontWeight.bold,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
                     const SizedBox(height: 4),
@@ -430,7 +428,7 @@ class _CalculatorScreenState extends ConsumerState<CalculatorScreen> {
                       '${total - attended}',
                       style: const TextStyle(
                         fontSize: 18,
-                        fontWeight: FontWeight.bold,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
                   ],
@@ -480,7 +478,7 @@ class _CalculatorScreenState extends ConsumerState<CalculatorScreen> {
                 'IF I BUNK NEXT',
                 style: TextStyle(
                   fontSize: 10,
-                  fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.w600,
                   color: AppColors.outlineLight,
                 ),
               ),
@@ -519,7 +517,7 @@ class _CalculatorScreenState extends ConsumerState<CalculatorScreen> {
                   '${_bunkCount.toInt()}',
                   style: const TextStyle(
                     color: AppColors.redBg,
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.w600,
                     fontSize: 13,
                   ),
                 ),
@@ -555,7 +553,7 @@ class _CalculatorScreenState extends ConsumerState<CalculatorScreen> {
                 'AND ATTEND NEXT',
                 style: TextStyle(
                   fontSize: 10,
-                  fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.w600,
                   color: AppColors.outlineLight,
                 ),
               ),
@@ -594,7 +592,7 @@ class _CalculatorScreenState extends ConsumerState<CalculatorScreen> {
                   '${_attendCount.toInt()}',
                   style: const TextStyle(
                     color: Color(0xFF16A34A),
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.w600,
                     fontSize: 13,
                   ),
                 ),
@@ -727,7 +725,7 @@ class _CalculatorScreenState extends ConsumerState<CalculatorScreen> {
                 children: [
                   Text(
                     'Predicted Result',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                    style: TextStyle(fontWeight: FontWeight.w600, fontSize: 15),
                   ),
                   SizedBox(height: 2),
                   Text(
@@ -735,7 +733,7 @@ class _CalculatorScreenState extends ConsumerState<CalculatorScreen> {
                     style: TextStyle(
                       color: AppColors.outlineLight,
                       fontSize: 8,
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
                 ],
@@ -755,7 +753,7 @@ class _CalculatorScreenState extends ConsumerState<CalculatorScreen> {
                     style: TextStyle(
                       color: AppColors.outlineLight,
                       fontSize: 9,
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
                   const SizedBox(height: 4),
@@ -763,7 +761,7 @@ class _CalculatorScreenState extends ConsumerState<CalculatorScreen> {
                     '${newPct.toStringAsFixed(2)}%',
                     style: const TextStyle(
                       fontSize: 26,
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
                 ],
@@ -776,7 +774,7 @@ class _CalculatorScreenState extends ConsumerState<CalculatorScreen> {
                     style: TextStyle(
                       color: AppColors.outlineLight,
                       fontSize: 9,
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
                   const SizedBox(height: 4),
@@ -784,7 +782,7 @@ class _CalculatorScreenState extends ConsumerState<CalculatorScreen> {
                     diffStr,
                     style: TextStyle(
                       fontSize: 18,
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.w600,
                       color: diffColor,
                     ),
                   ),
@@ -824,7 +822,7 @@ class _CalculatorScreenState extends ConsumerState<CalculatorScreen> {
                     verdictText,
                     style: const TextStyle(
                       fontSize: 12,
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
                 ),
@@ -841,7 +839,7 @@ class _CalculatorScreenState extends ConsumerState<CalculatorScreen> {
                 style: const TextStyle(
                   color: AppColors.outlineLight,
                   fontSize: 9.5,
-                  fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
               Row(
@@ -862,7 +860,7 @@ class _CalculatorScreenState extends ConsumerState<CalculatorScreen> {
                     style: const TextStyle(
                       color: AppColors.outlineLight,
                       fontSize: 9.5,
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
                 ],
@@ -917,7 +915,7 @@ class _CalculatorScreenState extends ConsumerState<CalculatorScreen> {
             SizedBox(width: 8),
             Text(
               'Quick Scenarios',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+              style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
             ),
           ],
         ),
@@ -966,7 +964,7 @@ class _CalculatorScreenState extends ConsumerState<CalculatorScreen> {
                       s['title'] as String,
                       style: const TextStyle(
                         fontSize: 12.5,
-                        fontWeight: FontWeight.bold,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
                     const SizedBox(height: 1),
@@ -975,7 +973,7 @@ class _CalculatorScreenState extends ConsumerState<CalculatorScreen> {
                       style: const TextStyle(
                         color: AppColors.outlineLight,
                         fontSize: 9.5,
-                        fontWeight: FontWeight.bold,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
                   ],

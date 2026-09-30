@@ -50,7 +50,7 @@ class AboutScreen extends StatelessWidget {
         ),
         title: Text(
           'About Bunk Mitra',
-          style: GoogleFonts.inter(fontWeight: FontWeight.bold, fontSize: 20),
+          style: GoogleFonts.inter(fontWeight: FontWeight.w600, fontSize: 20),
         ),
         elevation: 0,
         backgroundColor: Colors.transparent,
@@ -117,7 +117,7 @@ class AboutScreen extends StatelessWidget {
                       'Bunk Mitra',
                       style: GoogleFonts.inter(
                         fontSize: 28,
-                        fontWeight: FontWeight.w700,
+                        fontWeight: FontWeight.w600,
                         color: Colors.white,
                       ),
                     ),
@@ -154,7 +154,7 @@ class AboutScreen extends StatelessWidget {
                           'v1.0.7',
                           style: GoogleFonts.inter(
                             fontSize: 10,
-                            fontWeight: FontWeight.bold,
+                            fontWeight: FontWeight.w600,
                             color: isDark
                                 ? AppColors.primaryDark
                                 : AppColors.primaryLight,
@@ -204,7 +204,7 @@ class AboutScreen extends StatelessWidget {
                           'Why This App Exists',
                           style: TextStyle(
                             fontSize: 16,
-                            fontWeight: FontWeight.bold,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
                         const SizedBox(height: 8),
@@ -221,7 +221,7 @@ class AboutScreen extends StatelessWidget {
                           style: GoogleFonts.inter(
                             fontSize: 13,
                             fontStyle: FontStyle.italic,
-                            fontWeight: FontWeight.bold,
+                            fontWeight: FontWeight.w600,
                             color: isDark
                                 ? const Color(0xFFC3C0FF)
                                 : const Color(0xFF4F46E5),
@@ -264,7 +264,7 @@ class AboutScreen extends StatelessWidget {
                       'PREMIUM FEATURES',
                       style: TextStyle(
                         fontSize: 11,
-                        fontWeight: FontWeight.w600,
+                        fontWeight: FontWeight.w500,
                         letterSpacing: 1.0,
                         color: Colors.grey,
                       ),
@@ -330,7 +330,7 @@ class AboutScreen extends StatelessWidget {
                 'THE BUNK MITRA TEAM',
                 style: TextStyle(
                   fontSize: 11,
-                  fontWeight: FontWeight.w600,
+                  fontWeight: FontWeight.w500,
                   letterSpacing: 1.0,
                   color: Colors.grey,
                 ),
@@ -439,7 +439,7 @@ class AboutScreen extends StatelessWidget {
                   title,
                   style: const TextStyle(
                     fontSize: 14,
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
                 const SizedBox(height: 2),
@@ -505,7 +505,7 @@ class AboutScreen extends StatelessWidget {
                       name,
                       style: const TextStyle(
                         fontSize: 16,
-                        fontWeight: FontWeight.bold,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
                     Text(
@@ -526,7 +526,7 @@ class AboutScreen extends StatelessWidget {
                         role,
                         style: const TextStyle(
                           fontSize: 9,
-                          fontWeight: FontWeight.bold,
+                          fontWeight: FontWeight.w600,
                           color: AppColors.primaryLight,
                         ),
                       ),
@@ -611,7 +611,7 @@ class AboutScreen extends StatelessWidget {
                 label,
                 style: TextStyle(
                   fontSize: 10,
-                  fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.w600,
                   color: color,
                 ),
               ),

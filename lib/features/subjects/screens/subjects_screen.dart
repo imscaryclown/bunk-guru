@@ -75,9 +75,11 @@ class _SubjectsScreenState extends ConsumerState<SubjectsScreen> {
               child: subjects.isEmpty
                   ? _buildEmptyState()
                   : ListView.builder(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 20.0,
-                        vertical: 8.0,
+                      padding: EdgeInsets.fromLTRB(
+                        20.0,
+                        8.0,
+                        20.0,
+                        160.0 + MediaQuery.of(context).padding.bottom,
                       ),
                       itemCount: subjects.length,
                       itemBuilder: (context, index) {
@@ -92,23 +94,17 @@ class _SubjectsScreenState extends ConsumerState<SubjectsScreen> {
 
       // ===== FAB ADD BUTTON =====
       floatingActionButton: Padding(
-        padding: const EdgeInsets.only(bottom: 84.0, right: 8.0),
+        padding: EdgeInsets.only(
+          bottom: 100.0 + MediaQuery.of(context).padding.bottom,
+          right: 8.0,
+        ),
         child: FloatingActionButton(
           shape: const CircleBorder(),
-          backgroundColor: AppColors.primaryLight,
+          backgroundColor: const Color(0xFF4F46E5),
           foregroundColor: Colors.white,
+          elevation: 4,
           onPressed: () => _showAddSubjectSheet(),
-          child: Container(
-            width: 56,
-            height: 56,
-            decoration: const BoxDecoration(
-              shape: BoxShape.circle,
-              gradient: LinearGradient(
-                colors: [Color(0xFF4F46E5), Color(0xFFB4136D)],
-              ),
-            ),
-            child: const Icon(Icons.add, size: 28),
-          ),
+          child: const Icon(Icons.add, size: 28),
         ),
       ),
     );
@@ -135,7 +131,7 @@ class _SubjectsScreenState extends ConsumerState<SubjectsScreen> {
           const SizedBox(height: 16),
           const Text(
             'No Subjects Yet',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+            style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
           ),
           const SizedBox(height: 6),
           const Text(
@@ -213,7 +209,7 @@ class _SubjectsScreenState extends ConsumerState<SubjectsScreen> {
                         Text(
                           s.name,
                           style: const TextStyle(
-                            fontWeight: FontWeight.bold,
+                            fontWeight: FontWeight.w600,
                             fontSize: 16,
                           ),
                           maxLines: 1,
@@ -247,7 +243,7 @@ class _SubjectsScreenState extends ConsumerState<SubjectsScreen> {
                           '${combinedPct.toStringAsFixed(1)}%',
                           style: TextStyle(
                             color: cColor,
-                            fontWeight: FontWeight.bold,
+                            fontWeight: FontWeight.w600,
                             fontSize: 15,
                           ),
                         ),
@@ -260,7 +256,7 @@ class _SubjectsScreenState extends ConsumerState<SubjectsScreen> {
                         style: const TextStyle(
                           color: AppColors.outlineLight,
                           fontSize: 8,
-                          fontWeight: FontWeight.bold,
+                          fontWeight: FontWeight.w600,
                           letterSpacing: 0.3,
                         ),
                       ),
@@ -283,7 +279,7 @@ class _SubjectsScreenState extends ConsumerState<SubjectsScreen> {
                           style: TextStyle(
                             color: AppColors.outlineLight,
                             fontSize: 9,
-                            fontWeight: FontWeight.bold,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
                         Text(
@@ -291,7 +287,7 @@ class _SubjectsScreenState extends ConsumerState<SubjectsScreen> {
                           style: const TextStyle(
                             color: AppColors.outlineLight,
                             fontSize: 9,
-                            fontWeight: FontWeight.bold,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
                       ],
@@ -325,7 +321,7 @@ class _SubjectsScreenState extends ConsumerState<SubjectsScreen> {
                           style: TextStyle(
                             color: AppColors.outlineLight,
                             fontSize: 9,
-                            fontWeight: FontWeight.bold,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
                         Text(
@@ -333,7 +329,7 @@ class _SubjectsScreenState extends ConsumerState<SubjectsScreen> {
                           style: const TextStyle(
                             color: AppColors.outlineLight,
                             fontSize: 9,
-                            fontWeight: FontWeight.bold,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
                       ],
@@ -395,7 +391,7 @@ class _SubjectsScreenState extends ConsumerState<SubjectsScreen> {
                               ? AppColors.redBg
                               : (isDark ? Colors.white70 : Colors.black87),
                           fontSize: 11.5,
-                          fontWeight: FontWeight.bold,
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
                     ),
@@ -463,7 +459,7 @@ class _SubjectsScreenState extends ConsumerState<SubjectsScreen> {
                   const SizedBox(height: 16),
                   const Text(
                     'Add Subject',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
                   ),
                   const SizedBox(height: 16),
 
@@ -539,7 +535,7 @@ class _SubjectsScreenState extends ConsumerState<SubjectsScreen> {
                             'Subject has Practical / Lab?',
                             style: TextStyle(
                               fontSize: 13,
-                              fontWeight: FontWeight.w500,
+                              fontWeight: FontWeight.w400,
                             ),
                           ),
                         ),
@@ -584,7 +580,7 @@ class _SubjectsScreenState extends ConsumerState<SubjectsScreen> {
                             'Only Practical / Lab Subject?',
                             style: TextStyle(
                               fontSize: 13,
-                              fontWeight: FontWeight.w500,
+                              fontWeight: FontWeight.w400,
                             ),
                           ),
                         ),
@@ -621,9 +617,7 @@ class _SubjectsScreenState extends ConsumerState<SubjectsScreen> {
 
                   // Submit button
                   CustomButton(
-                    gradient: const LinearGradient(
-                      colors: [Color(0xFF4F46E5), Color(0xFFB4136D)],
-                    ),
+                    color: const Color(0xFF4F46E5),
                     onTap: () async {
                       final name = nameController.text.trim();
                       if (name.isEmpty) return;
@@ -670,7 +664,7 @@ class _SubjectsScreenState extends ConsumerState<SubjectsScreen> {
                       'ADD SUBJECT',
                       style: TextStyle(
                         color: Colors.white,
-                        fontWeight: FontWeight.bold,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
                   ),
@@ -747,7 +741,7 @@ class _SubjectsScreenState extends ConsumerState<SubjectsScreen> {
                     'Edit Subject — ${s.name}',
                     style: const TextStyle(
                       fontSize: 18,
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
                   const SizedBox(height: 16),
@@ -776,7 +770,7 @@ class _SubjectsScreenState extends ConsumerState<SubjectsScreen> {
                                 'TOTAL CLASSES',
                                 style: TextStyle(
                                   fontSize: 9,
-                                  fontWeight: FontWeight.bold,
+                                  fontWeight: FontWeight.w600,
                                   color: AppColors.outlineLight,
                                 ),
                               ),
@@ -795,7 +789,7 @@ class _SubjectsScreenState extends ConsumerState<SubjectsScreen> {
                                         '$total',
                                         style: const TextStyle(
                                           fontSize: 16,
-                                          fontWeight: FontWeight.bold,
+                                          fontWeight: FontWeight.w600,
                                         ),
                                       ),
                                     ),
@@ -821,7 +815,7 @@ class _SubjectsScreenState extends ConsumerState<SubjectsScreen> {
                                 'ATTENDED',
                                 style: TextStyle(
                                   fontSize: 9,
-                                  fontWeight: FontWeight.bold,
+                                  fontWeight: FontWeight.w600,
                                   color: AppColors.outlineLight,
                                 ),
                               ),
@@ -840,7 +834,7 @@ class _SubjectsScreenState extends ConsumerState<SubjectsScreen> {
                                         '$attended',
                                         style: const TextStyle(
                                           fontSize: 16,
-                                          fontWeight: FontWeight.bold,
+                                          fontWeight: FontWeight.w600,
                                         ),
                                       ),
                                     ),
@@ -897,7 +891,7 @@ class _SubjectsScreenState extends ConsumerState<SubjectsScreen> {
                             'Subject has Practical / Lab?',
                             style: TextStyle(
                               fontSize: 13,
-                              fontWeight: FontWeight.w500,
+                              fontWeight: FontWeight.w400,
                             ),
                           ),
                         ),
@@ -940,7 +934,7 @@ class _SubjectsScreenState extends ConsumerState<SubjectsScreen> {
                             'Only Practical / Lab Subject?',
                             style: TextStyle(
                               fontSize: 13,
-                              fontWeight: FontWeight.w500,
+                              fontWeight: FontWeight.w400,
                             ),
                           ),
                         ),
@@ -962,7 +956,7 @@ class _SubjectsScreenState extends ConsumerState<SubjectsScreen> {
                                 'LAB TOTAL',
                                 style: TextStyle(
                                   fontSize: 9,
-                                  fontWeight: FontWeight.bold,
+                                  fontWeight: FontWeight.w600,
                                   color: AppColors.outlineLight,
                                 ),
                               ),
@@ -984,7 +978,7 @@ class _SubjectsScreenState extends ConsumerState<SubjectsScreen> {
                                         '$practicalTotal',
                                         style: const TextStyle(
                                           fontSize: 16,
-                                          fontWeight: FontWeight.bold,
+                                          fontWeight: FontWeight.w600,
                                         ),
                                       ),
                                     ),
@@ -1011,7 +1005,7 @@ class _SubjectsScreenState extends ConsumerState<SubjectsScreen> {
                                 'LAB ATTENDED',
                                 style: TextStyle(
                                   fontSize: 9,
-                                  fontWeight: FontWeight.bold,
+                                  fontWeight: FontWeight.w600,
                                   color: AppColors.outlineLight,
                                 ),
                               ),
@@ -1033,7 +1027,7 @@ class _SubjectsScreenState extends ConsumerState<SubjectsScreen> {
                                         '$practicalAttended',
                                         style: const TextStyle(
                                           fontSize: 16,
-                                          fontWeight: FontWeight.bold,
+                                          fontWeight: FontWeight.w600,
                                         ),
                                       ),
                                     ),
@@ -1071,7 +1065,7 @@ class _SubjectsScreenState extends ConsumerState<SubjectsScreen> {
                         '${isPracticalOnly ? "Practical" : "Combined"}: ${simPct.toStringAsFixed(1)}% — $simMsg',
                         style: const TextStyle(
                           fontSize: 12.5,
-                          fontWeight: FontWeight.bold,
+                          fontWeight: FontWeight.w600,
                         ),
                         textAlign: TextAlign.center,
                       ),
@@ -1130,7 +1124,7 @@ class _SubjectsScreenState extends ConsumerState<SubjectsScreen> {
                             'DELETE',
                             style: TextStyle(
                               color: Colors.red,
-                              fontWeight: FontWeight.bold,
+                              fontWeight: FontWeight.w600,
                               fontSize: 12,
                             ),
                           ),
@@ -1140,9 +1134,7 @@ class _SubjectsScreenState extends ConsumerState<SubjectsScreen> {
                       Expanded(
                         flex: 2,
                         child: CustomButton(
-                          gradient: const LinearGradient(
-                            colors: [Color(0xFF4F46E5), Color(0xFFB4136D)],
-                          ),
+                          color: const Color(0xFF4F46E5),
                           onTap: () async {
                             final name = nameController.text.trim();
                             if (name.isEmpty) return;
@@ -1173,7 +1165,7 @@ class _SubjectsScreenState extends ConsumerState<SubjectsScreen> {
                             'SAVE CHANGES',
                             style: TextStyle(
                               color: Colors.white,
-                              fontWeight: FontWeight.bold,
+                              fontWeight: FontWeight.w600,
                               fontSize: 12,
                             ),
                           ),
@@ -1236,7 +1228,7 @@ class _SubjectsScreenState extends ConsumerState<SubjectsScreen> {
                   const SizedBox(height: 16),
                   const Text(
                     'Batch Schedule',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
                   ),
                   const SizedBox(height: 4),
                   const Text(
@@ -1269,7 +1261,7 @@ class _SubjectsScreenState extends ConsumerState<SubjectsScreen> {
                           'Load Class Schedule',
                           style: TextStyle(
                             color: AppColors.primaryLight,
-                            fontWeight: FontWeight.bold,
+                            fontWeight: FontWeight.w600,
                             fontSize: 14,
                           ),
                         ),
@@ -1294,7 +1286,7 @@ class _SubjectsScreenState extends ConsumerState<SubjectsScreen> {
                                       : Colors.white,
                                 ),
                                 style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
+                                  fontWeight: FontWeight.w600,
                                   letterSpacing: 2,
                                 ),
                               ),
@@ -1345,7 +1337,7 @@ class _SubjectsScreenState extends ConsumerState<SubjectsScreen> {
                                 child: const Text(
                                   'LOAD',
                                   style: TextStyle(
-                                    fontWeight: FontWeight.bold,
+                                    fontWeight: FontWeight.w600,
                                     fontSize: 12,
                                   ),
                                 ),
@@ -1379,7 +1371,7 @@ class _SubjectsScreenState extends ConsumerState<SubjectsScreen> {
                         const Text(
                           'Share My Schedule',
                           style: TextStyle(
-                            fontWeight: FontWeight.bold,
+                            fontWeight: FontWeight.w600,
                             fontSize: 14,
                           ),
                         ),
@@ -1435,7 +1427,7 @@ class _SubjectsScreenState extends ConsumerState<SubjectsScreen> {
                                     'GENERATE SHARE CODE',
                                     style: TextStyle(
                                       color: AppColors.primaryLight,
-                                      fontWeight: FontWeight.bold,
+                                      fontWeight: FontWeight.w600,
                                       fontSize: 12,
                                     ),
                                   ),
@@ -1457,7 +1449,7 @@ class _SubjectsScreenState extends ConsumerState<SubjectsScreen> {
                                   style: TextStyle(
                                     color: AppColors.outlineLight,
                                     fontSize: 10,
-                                    fontWeight: FontWeight.w600,
+                                    fontWeight: FontWeight.w500,
                                   ),
                                 ),
                                 const SizedBox(height: 4),
@@ -1466,7 +1458,7 @@ class _SubjectsScreenState extends ConsumerState<SubjectsScreen> {
                                   style: const TextStyle(
                                     color: AppColors.primaryLight,
                                     fontSize: 26,
-                                    fontWeight: FontWeight.w700,
+                                    fontWeight: FontWeight.w600,
                                     letterSpacing: 4,
                                   ),
                                 ),
@@ -1539,7 +1531,7 @@ class _SubjectsScreenState extends ConsumerState<SubjectsScreen> {
                   const SizedBox(height: 20),
                   const Text(
                     'Sync Attendance',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
                   ),
                   const SizedBox(height: 4),
                   const Text(
@@ -1589,7 +1581,7 @@ class _SubjectsScreenState extends ConsumerState<SubjectsScreen> {
                               Text(
                                 name,
                                 style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
+                                  fontWeight: FontWeight.w600,
                                   fontSize: 15,
                                 ),
                               ),
@@ -1609,7 +1601,7 @@ class _SubjectsScreenState extends ConsumerState<SubjectsScreen> {
                                           'Theory Classes',
                                           style: TextStyle(
                                             fontSize: 13,
-                                            fontWeight: FontWeight.w500,
+                                            fontWeight: FontWeight.w400,
                                           ),
                                         ),
                                         Text(
@@ -1617,7 +1609,7 @@ class _SubjectsScreenState extends ConsumerState<SubjectsScreen> {
                                           style: const TextStyle(
                                             fontSize: 10,
                                             color: AppColors.outlineLight,
-                                            fontWeight: FontWeight.bold,
+                                            fontWeight: FontWeight.w600,
                                           ),
                                         ),
                                       ],
@@ -1639,7 +1631,7 @@ class _SubjectsScreenState extends ConsumerState<SubjectsScreen> {
                                               '${theoryCounts[id] ?? 0}',
                                               style: const TextStyle(
                                                 fontSize: 16,
-                                                fontWeight: FontWeight.bold,
+                                                fontWeight: FontWeight.w600,
                                               ),
                                             ),
                                           ),
@@ -1684,7 +1676,7 @@ class _SubjectsScreenState extends ConsumerState<SubjectsScreen> {
                                           'Practical / Lab',
                                           style: TextStyle(
                                             fontSize: 13,
-                                            fontWeight: FontWeight.w500,
+                                            fontWeight: FontWeight.w400,
                                             color: Color(0xFF006A7C),
                                           ),
                                         ),
@@ -1693,7 +1685,7 @@ class _SubjectsScreenState extends ConsumerState<SubjectsScreen> {
                                           style: const TextStyle(
                                             fontSize: 10,
                                             color: AppColors.outlineLight,
-                                            fontWeight: FontWeight.bold,
+                                            fontWeight: FontWeight.w600,
                                           ),
                                         ),
                                       ],
@@ -1715,7 +1707,7 @@ class _SubjectsScreenState extends ConsumerState<SubjectsScreen> {
                                               '${practicalCounts[id] ?? 0}',
                                               style: const TextStyle(
                                                 fontSize: 16,
-                                                fontWeight: FontWeight.bold,
+                                                fontWeight: FontWeight.w600,
                                               ),
                                             ),
                                           ),
@@ -1743,9 +1735,7 @@ class _SubjectsScreenState extends ConsumerState<SubjectsScreen> {
 
                   // Commit Sync Button
                   CustomButton(
-                    gradient: const LinearGradient(
-                      colors: [Color(0xFF4F46E5), Color(0xFFB4136D)],
-                    ),
+                    color: const Color(0xFF4F46E5),
                     onTap: () async {
                       try {
                         // Map counts back
@@ -1778,7 +1768,7 @@ class _SubjectsScreenState extends ConsumerState<SubjectsScreen> {
                       'LOAD DATA AND FINISH',
                       style: TextStyle(
                         color: Colors.white,
-                        fontWeight: FontWeight.bold,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
                   ),
@@ -1824,7 +1814,7 @@ class _SubjectsScreenState extends ConsumerState<SubjectsScreen> {
             symbol,
             style: TextStyle(
               fontSize: 18,
-              fontWeight: FontWeight.bold,
+              fontWeight: FontWeight.w600,
               color: fg,
             ),
           ),

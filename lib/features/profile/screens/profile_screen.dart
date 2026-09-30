@@ -18,7 +18,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../subjects/services/subject_parser.dart';
 
 class ProfileScreen extends ConsumerStatefulWidget {
-  const ProfileScreen({Key? key}) : super(key: key);
+  const ProfileScreen({super.key});
 
   @override
   ConsumerState<ProfileScreen> createState() => _ProfileScreenState();
@@ -294,10 +294,10 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
 
     final Color bg = isAdd
         ? (isDark
-              ? AppColors.primaryDark.withOpacity(0.1)
+              ? AppColors.primaryDark.withValues(alpha: 0.1)
               : AppColors.primaryFixed)
         : (isDark
-              ? Colors.white.withOpacity(0.04)
+              ? Colors.white.withValues(alpha: 0.04)
               : AppColors.bgSurfaceContainerLight);
 
     final Color fg = isAdd
@@ -318,7 +318,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             symbol,
             style: TextStyle(
               fontSize: 18,
-              fontWeight: FontWeight.bold,
+              fontWeight: FontWeight.w600,
               color: fg,
             ),
           ),
@@ -383,7 +383,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                   const SizedBox(height: 20),
                   const Text(
                     'Sync Attendance',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
                   ),
                   const SizedBox(height: 4),
                   const Text(
@@ -464,11 +464,11 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                       ),
                       decoration: BoxDecoration(
                         color: isDark
-                            ? AppColors.primaryDark.withOpacity(0.1)
-                            : AppColors.primaryFixed.withOpacity(0.3),
+                            ? AppColors.primaryDark.withValues(alpha: 0.1)
+                            : AppColors.primaryFixed.withValues(alpha: 0.3),
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(
-                          color: AppColors.primaryLight.withOpacity(0.5),
+                          color: AppColors.primaryLight.withValues(alpha: 0.5),
                         ),
                       ),
                       child: Row(
@@ -496,7 +496,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                 : 'Auto-fill via Scan',
                             style: const TextStyle(
                               color: AppColors.primaryLight,
-                              fontWeight: FontWeight.bold,
+                              fontWeight: FontWeight.w600,
                             ),
                           ),
                         ],
@@ -514,7 +514,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                 ? Colors.green
                                 : Colors.redAccent,
                             fontSize: 12,
-                            fontWeight: FontWeight.bold,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
                       ),
@@ -547,9 +547,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                             borderRadius: BorderRadius.circular(20),
                             border: Border.all(
                               color: isDark
-                                  ? Colors.white.withOpacity(0.04)
-                                  : AppColors.outlineVariantLight.withOpacity(
-                                      0.3,
+                                  ? Colors.white.withValues(alpha: 0.04)
+                                  : AppColors.outlineVariantLight.withValues(
+                                      alpha: 0.3,
                                     ),
                             ),
                           ),
@@ -560,7 +560,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                 name,
                                 style: TextStyle(
                                   color: isDark ? Colors.white : Colors.black,
-                                  fontWeight: FontWeight.bold,
+                                  fontWeight: FontWeight.w600,
                                   fontSize: 15,
                                 ),
                               ),
@@ -583,7 +583,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                                 ? Colors.white
                                                 : Colors.black,
                                             fontSize: 13,
-                                            fontWeight: FontWeight.w500,
+                                            fontWeight: FontWeight.w400,
                                           ),
                                         ),
                                         Text(
@@ -591,7 +591,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                           style: const TextStyle(
                                             fontSize: 10,
                                             color: AppColors.outlineLight,
-                                            fontWeight: FontWeight.bold,
+                                            fontWeight: FontWeight.w600,
                                           ),
                                         ),
                                       ],
@@ -616,7 +616,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                                     ? Colors.white
                                                     : Colors.black,
                                                 fontSize: 16,
-                                                fontWeight: FontWeight.bold,
+                                                fontWeight: FontWeight.w600,
                                               ),
                                             ),
                                           ),
@@ -661,7 +661,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                           'Practical / Lab',
                                           style: TextStyle(
                                             fontSize: 13,
-                                            fontWeight: FontWeight.w500,
+                                            fontWeight: FontWeight.w400,
                                             color: Color(0xFF006A7C),
                                           ),
                                         ),
@@ -670,7 +670,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                           style: const TextStyle(
                                             fontSize: 10,
                                             color: AppColors.outlineLight,
-                                            fontWeight: FontWeight.bold,
+                                            fontWeight: FontWeight.w600,
                                           ),
                                         ),
                                       ],
@@ -695,7 +695,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                                     ? Colors.white
                                                     : Colors.black,
                                                 fontSize: 16,
-                                                fontWeight: FontWeight.bold,
+                                                fontWeight: FontWeight.w600,
                                               ),
                                             ),
                                           ),
@@ -723,9 +723,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
 
                   // Commit Sync Button
                   CustomButton(
-                    gradient: const LinearGradient(
-                      colors: [Color(0xFF4F46E5), Color(0xFFB4136D)],
-                    ),
+                    color: const Color(0xFF4F46E5),
                     onTap: () async {
                       try {
                         // Map counts back
@@ -760,7 +758,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                       'LOAD DATA AND FINISH',
                       style: TextStyle(
                         color: Colors.white,
-                        fontWeight: FontWeight.bold,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
                   ),
@@ -812,16 +810,16 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                   boxShadow: [
                     BoxShadow(
                       color: isDark
-                          ? Colors.black.withOpacity(0.3)
-                          : Colors.indigo.withOpacity(0.04),
+                          ? Colors.black.withValues(alpha: 0.3)
+                          : Colors.indigo.withValues(alpha: 0.04),
                       blurRadius: 16,
                       offset: const Offset(0, 4),
                     ),
                   ],
                   border: Border.all(
                     color: isDark
-                        ? Colors.white.withOpacity(0.05)
-                        : Colors.indigo.withOpacity(0.05),
+                        ? Colors.white.withValues(alpha: 0.05)
+                        : Colors.indigo.withValues(alpha: 0.05),
                   ),
                 ),
                 padding: const EdgeInsets.all(20),
@@ -841,10 +839,12 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                               border: Border.all(
                                 color: isDark
                                     ? Colors.white10
-                                    : Colors.indigo.withOpacity(0.1),
+                                    : Colors.indigo.withValues(alpha: 0.1),
                                 width: 2,
                               ),
-                              color: AppColors.primaryLight.withOpacity(0.1),
+                              color: AppColors.primaryLight.withValues(
+                                alpha: 0.1,
+                              ),
                             ),
                             clipBehavior: Clip.antiAlias,
                             child: _isUploadingAvatar
@@ -876,7 +876,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                                       : 'S',
                                                   style: const TextStyle(
                                                     fontSize: 28,
-                                                    fontWeight: FontWeight.bold,
+                                                    fontWeight: FontWeight.w600,
                                                     color:
                                                         AppColors.primaryLight,
                                                   ),
@@ -890,7 +890,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                                 : 'S',
                                             style: const TextStyle(
                                               fontSize: 28,
-                                              fontWeight: FontWeight.bold,
+                                              fontWeight: FontWeight.w600,
                                               color: AppColors.primaryLight,
                                             ),
                                           ),
@@ -956,10 +956,12 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                             uni,
                             style: GoogleFonts.inter(
                               fontSize: 10,
-                              fontWeight: FontWeight.bold,
+                              fontWeight: FontWeight.w600,
                               color: isDark
                                   ? const Color(0xFFC3C0FF)
-                                  : AppColors.primaryLight.withOpacity(0.8),
+                                  : AppColors.primaryLight.withValues(
+                                      alpha: 0.8,
+                                    ),
                               letterSpacing: 0.8,
                             ),
                             maxLines: 1,
@@ -973,15 +975,17 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                             ),
                             decoration: BoxDecoration(
                               color: isDark
-                                  ? Colors.indigo.withOpacity(0.2)
-                                  : AppColors.primaryFixed.withOpacity(0.2),
+                                  ? Colors.indigo.withValues(alpha: 0.2)
+                                  : AppColors.primaryFixed.withValues(
+                                      alpha: 0.2,
+                                    ),
                               borderRadius: BorderRadius.circular(20),
                             ),
                             child: Text(
                               '$dept · $year',
                               style: GoogleFonts.inter(
                                 fontSize: 9,
-                                fontWeight: FontWeight.bold,
+                                fontWeight: FontWeight.w600,
                                 color: isDark
                                     ? AppColors.primaryDark
                                     : AppColors.primaryLight,
@@ -1003,7 +1007,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                 'PROFILE SETTINGS',
                 style: TextStyle(
                   fontSize: 11,
-                  fontWeight: FontWeight.w600,
+                  fontWeight: FontWeight.w500,
                   letterSpacing: 1.0,
                   color: Colors.grey,
                 ),
@@ -1025,7 +1029,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                 'PREFERENCES',
                 style: TextStyle(
                   fontSize: 11,
-                  fontWeight: FontWeight.w600,
+                  fontWeight: FontWeight.w500,
                   letterSpacing: 1.0,
                   color: Colors.grey,
                 ),
@@ -1052,8 +1056,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(
                     color: isDark
-                        ? Colors.white.withOpacity(0.04)
-                        : Colors.indigo.withOpacity(0.04),
+                        ? Colors.white.withValues(alpha: 0.04)
+                        : Colors.indigo.withValues(alpha: 0.04),
                   ),
                 ),
                 padding: const EdgeInsets.symmetric(
@@ -1066,7 +1070,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                       width: 40,
                       height: 40,
                       decoration: BoxDecoration(
-                        color: Colors.purple.withOpacity(0.1),
+                        color: Colors.purple.withValues(alpha: 0.1),
                         shape: BoxShape.circle,
                       ),
                       child: const Icon(Icons.dark_mode, color: Colors.purple),
@@ -1080,7 +1084,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                             'Dark Theme',
                             style: TextStyle(
                               fontSize: 15,
-                              fontWeight: FontWeight.bold,
+                              fontWeight: FontWeight.w600,
                             ),
                           ),
                           Text(
@@ -1092,7 +1096,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                     ),
                     Switch(
                       value: ref.watch(themeModeProvider) == ThemeMode.dark,
-                      activeColor: AppColors.primaryLight,
+                      activeThumbColor: AppColors.primaryLight,
                       onChanged: (val) {
                         HapticFeedback.lightImpact();
                         ref.read(themeModeProvider.notifier).toggleTheme();
@@ -1107,7 +1111,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                 'BATCH WORKSPACE',
                 style: TextStyle(
                   fontSize: 11,
-                  fontWeight: FontWeight.w600,
+                  fontWeight: FontWeight.w500,
                   letterSpacing: 1.0,
                   color: Colors.grey,
                 ),
@@ -1148,7 +1152,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                 'ABOUT',
                 style: TextStyle(
                   fontSize: 11,
-                  fontWeight: FontWeight.w600,
+                  fontWeight: FontWeight.w500,
                   letterSpacing: 1.0,
                   color: Colors.grey,
                 ),
@@ -1174,9 +1178,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
               Container(
                 width: double.infinity,
                 decoration: BoxDecoration(
-                  color: Colors.red.withOpacity(0.08),
+                  color: Colors.red.withValues(alpha: 0.08),
                   borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: Colors.red.withOpacity(0.2)),
+                  border: Border.all(color: Colors.red.withValues(alpha: 0.2)),
                 ),
                 child: InkWell(
                   onTap: () async {
@@ -1225,7 +1229,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                           'Logout',
                           style: TextStyle(
                             color: Colors.red,
-                            fontWeight: FontWeight.bold,
+                            fontWeight: FontWeight.w600,
                             fontSize: 16,
                           ),
                         ),
@@ -1258,8 +1262,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
           color: isDark
-              ? Colors.white.withOpacity(0.04)
-              : Colors.indigo.withOpacity(0.04),
+              ? Colors.white.withValues(alpha: 0.04)
+              : Colors.indigo.withValues(alpha: 0.04),
         ),
       ),
       child: InkWell(
@@ -1273,7 +1277,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                 width: 40,
                 height: 40,
                 decoration: BoxDecoration(
-                  color: iconColor.withOpacity(0.1),
+                  color: iconColor.withValues(alpha: 0.1),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(icon, color: iconColor),
@@ -1287,7 +1291,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                       title,
                       style: const TextStyle(
                         fontSize: 15,
-                        fontWeight: FontWeight.bold,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
                     Text(
@@ -1308,7 +1312,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
 
 // ===== NOTIFICATION PREFS SHEET =====
 class NotificationPrefsSheet extends ConsumerStatefulWidget {
-  const NotificationPrefsSheet({Key? key}) : super(key: key);
+  const NotificationPrefsSheet({super.key});
 
   @override
   ConsumerState<NotificationPrefsSheet> createState() =>
@@ -1389,8 +1393,8 @@ class _NotificationPrefsSheetState
                       Container(
                         decoration: BoxDecoration(
                           color: isDark
-                              ? Colors.white.withOpacity(0.04)
-                              : Colors.indigo.withOpacity(0.03),
+                              ? Colors.white.withValues(alpha: 0.04)
+                              : Colors.indigo.withValues(alpha: 0.03),
                           borderRadius: BorderRadius.circular(16),
                         ),
                         padding: const EdgeInsets.symmetric(
@@ -1411,14 +1415,14 @@ class _NotificationPrefsSheetState
                                   'Enable Notifications',
                                   style: TextStyle(
                                     fontSize: 15,
-                                    fontWeight: FontWeight.bold,
+                                    fontWeight: FontWeight.w600,
                                   ),
                                 ),
                               ],
                             ),
                             Switch(
                               value: _notifEnabled,
-                              activeColor: AppColors.primaryLight,
+                              activeThumbColor: AppColors.primaryLight,
                               onChanged: (val) async {
                                 HapticFeedback.lightImpact();
                                 if (val) {
@@ -1454,8 +1458,8 @@ class _NotificationPrefsSheetState
                       Container(
                         decoration: BoxDecoration(
                           color: isDark
-                              ? Colors.white.withOpacity(0.04)
-                              : Colors.indigo.withOpacity(0.03),
+                              ? Colors.white.withValues(alpha: 0.04)
+                              : Colors.indigo.withValues(alpha: 0.03),
                           borderRadius: BorderRadius.circular(16),
                         ),
                         padding: const EdgeInsets.symmetric(
@@ -1476,7 +1480,7 @@ class _NotificationPrefsSheetState
                                       'Morning Briefing',
                                       style: TextStyle(
                                         fontSize: 15,
-                                        fontWeight: FontWeight.bold,
+                                        fontWeight: FontWeight.w600,
                                       ),
                                     ),
                                     Text(
@@ -1492,7 +1496,7 @@ class _NotificationPrefsSheetState
                             ),
                             Switch(
                               value: _morningEnabled,
-                              activeColor: AppColors.primaryLight,
+                              activeThumbColor: AppColors.primaryLight,
                               onChanged: (val) {
                                 HapticFeedback.lightImpact();
                                 setState(() {
@@ -1509,7 +1513,7 @@ class _NotificationPrefsSheetState
                         'CHOOSE YOUR BUNK BUDDY',
                         style: TextStyle(
                           fontSize: 11,
-                          fontWeight: FontWeight.w600,
+                          fontWeight: FontWeight.w500,
                           letterSpacing: 1.0,
                           color: Colors.grey,
                         ),
@@ -1527,9 +1531,11 @@ class _NotificationPrefsSheetState
                             decoration: BoxDecoration(
                               color: isSelected
                                   ? (isDark
-                                        ? AppColors.primaryDark.withOpacity(0.1)
-                                        : AppColors.primaryFixed.withOpacity(
-                                            0.3,
+                                        ? AppColors.primaryDark.withValues(
+                                            alpha: 0.1,
+                                          )
+                                        : AppColors.primaryFixed.withValues(
+                                            alpha: 0.3,
                                           ))
                                   : (isDark
                                         ? const Color(0xFF242729)
@@ -1539,8 +1545,10 @@ class _NotificationPrefsSheetState
                                 color: isSelected
                                     ? AppColors.primaryLight
                                     : (isDark
-                                          ? Colors.white.withOpacity(0.04)
-                                          : Colors.indigo.withOpacity(0.04)),
+                                          ? Colors.white.withValues(alpha: 0.04)
+                                          : Colors.indigo.withValues(
+                                              alpha: 0.04,
+                                            )),
                                 width: isSelected ? 1.5 : 1.0,
                               ),
                             ),
@@ -1568,7 +1576,7 @@ class _NotificationPrefsSheetState
                                                   ? Colors.white
                                                   : Colors.black,
                                               fontSize: 15,
-                                              fontWeight: FontWeight.bold,
+                                              fontWeight: FontWeight.w600,
                                             ),
                                           ),
                                           Text(
@@ -1601,7 +1609,7 @@ class _NotificationPrefsSheetState
                         'LIVE PREVIEW',
                         style: TextStyle(
                           fontSize: 10,
-                          fontWeight: FontWeight.w600,
+                          fontWeight: FontWeight.w500,
                           letterSpacing: 0.8,
                           color: Colors.grey,
                         ),
@@ -1615,8 +1623,8 @@ class _NotificationPrefsSheetState
                           borderRadius: BorderRadius.circular(16),
                           border: Border.all(
                             color: isDark
-                                ? Colors.white.withOpacity(0.05)
-                                : Colors.indigo.withOpacity(0.05),
+                                ? Colors.white.withValues(alpha: 0.05)
+                                : Colors.indigo.withValues(alpha: 0.05),
                           ),
                         ),
                         padding: const EdgeInsets.all(12.0),
@@ -1637,7 +1645,7 @@ class _NotificationPrefsSheetState
                                     '📚 DATA STRUCTURES · 15 MIN',
                                     style: TextStyle(
                                       fontSize: 9,
-                                      fontWeight: FontWeight.bold,
+                                      fontWeight: FontWeight.w600,
                                       color: AppColors.primaryLight,
                                     ),
                                   ),
@@ -1716,8 +1724,7 @@ class _NotificationPrefsSheetState
 class ShareScheduleSheet extends ConsumerStatefulWidget {
   final Function(List<dynamic> subjects, List<dynamic> schedule)?
   onSyncDataFetched;
-  const ShareScheduleSheet({Key? key, this.onSyncDataFetched})
-    : super(key: key);
+  const ShareScheduleSheet({super.key, this.onSyncDataFetched});
 
   @override
   ConsumerState<ShareScheduleSheet> createState() => _ShareScheduleSheetState();
@@ -1856,13 +1863,13 @@ class _ShareScheduleSheetState extends ConsumerState<ShareScheduleSheet> {
               Container(
                 decoration: BoxDecoration(
                   color: isDark
-                      ? Colors.white.withOpacity(0.04)
-                      : Colors.indigo.withOpacity(0.02),
+                      ? Colors.white.withValues(alpha: 0.04)
+                      : Colors.indigo.withValues(alpha: 0.02),
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(
                     color: isDark
-                        ? Colors.white.withOpacity(0.04)
-                        : Colors.indigo.withOpacity(0.05),
+                        ? Colors.white.withValues(alpha: 0.04)
+                        : Colors.indigo.withValues(alpha: 0.05),
                   ),
                 ),
                 padding: const EdgeInsets.all(16),
@@ -1873,7 +1880,7 @@ class _ShareScheduleSheetState extends ConsumerState<ShareScheduleSheet> {
                       'SHARE YOUR SCHEDULE',
                       style: TextStyle(
                         fontSize: 10,
-                        fontWeight: FontWeight.bold,
+                        fontWeight: FontWeight.w600,
                         color: Colors.grey,
                       ),
                     ),
@@ -1888,7 +1895,7 @@ class _ShareScheduleSheetState extends ConsumerState<ShareScheduleSheet> {
                               'YOUR SHARING CODE:',
                               style: TextStyle(
                                 fontSize: 11,
-                                fontWeight: FontWeight.bold,
+                                fontWeight: FontWeight.w600,
                                 color: AppColors.primaryLight,
                               ),
                             ),
@@ -1897,7 +1904,7 @@ class _ShareScheduleSheetState extends ConsumerState<ShareScheduleSheet> {
                               _generatedCode,
                               style: GoogleFonts.outfit(
                                 fontSize: 32,
-                                fontWeight: FontWeight.w700,
+                                fontWeight: FontWeight.w600,
                                 letterSpacing: 2,
                                 color: AppColors.primaryLight,
                               ),
@@ -1922,8 +1929,8 @@ class _ShareScheduleSheetState extends ConsumerState<ShareScheduleSheet> {
                       )
                     else
                       CustomButton(
-                        child: const Text('Generate Share Code'),
                         onTap: _generateCode,
+                        child: const Text('Generate Share Code'),
                       ),
                   ],
                 ),
@@ -1935,13 +1942,13 @@ class _ShareScheduleSheetState extends ConsumerState<ShareScheduleSheet> {
               Container(
                 decoration: BoxDecoration(
                   color: isDark
-                      ? Colors.white.withOpacity(0.04)
-                      : Colors.indigo.withOpacity(0.02),
+                      ? Colors.white.withValues(alpha: 0.04)
+                      : Colors.indigo.withValues(alpha: 0.02),
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(
                     color: isDark
-                        ? Colors.white.withOpacity(0.04)
-                        : Colors.indigo.withOpacity(0.05),
+                        ? Colors.white.withValues(alpha: 0.04)
+                        : Colors.indigo.withValues(alpha: 0.05),
                   ),
                 ),
                 padding: const EdgeInsets.all(16),
@@ -1952,7 +1959,7 @@ class _ShareScheduleSheetState extends ConsumerState<ShareScheduleSheet> {
                       'IMPORT SCHEDULE',
                       style: TextStyle(
                         fontSize: 10,
-                        fontWeight: FontWeight.bold,
+                        fontWeight: FontWeight.w600,
                         color: Colors.grey,
                       ),
                     ),
@@ -1966,8 +1973,8 @@ class _ShareScheduleSheetState extends ConsumerState<ShareScheduleSheet> {
                     _isImporting
                         ? const Center(child: CircularProgressIndicator())
                         : CustomButton(
-                            child: const Text('Import Schedule'),
                             onTap: _importSchedule,
+                            child: const Text('Import Schedule'),
                           ),
                   ],
                 ),

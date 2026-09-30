@@ -173,7 +173,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     style: theme.textTheme.displayLarge?.copyWith(
                       color: Colors.white,
                       fontSize: 36,
-                      fontWeight: FontWeight.w700,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
                 ).animate().fade(delay: 100.ms, duration: 400.ms),
@@ -247,7 +247,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 'Continue with Google',
                 style: TextStyle(
                   color: isDark ? Colors.white : const Color(0xFF1F2937),
-                  fontWeight: FontWeight.w600,
+                  fontWeight: FontWeight.w500,
                   letterSpacing: 0.2,
                   fontSize: 14,
                 ),
@@ -274,7 +274,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 'OR',
                 style: TextStyle(
                   fontSize: 11,
-                  fontWeight: FontWeight.w700,
+                  fontWeight: FontWeight.w600,
                   letterSpacing: 1.2,
                   color: isDark
                       ? AppColors.textMutedDark
@@ -321,7 +321,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 'Continue with Email',
                 style: TextStyle(
                   color: isDark ? Colors.white : const Color(0xFF1F2937),
-                  fontWeight: FontWeight.w600,
+                  fontWeight: FontWeight.w500,
                   letterSpacing: 0.2,
                   fontSize: 14,
                 ),
@@ -351,7 +351,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 'Sign up',
                 style: TextStyle(
                   color: AppColors.primaryLight,
-                  fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.w600,
                   decoration: TextDecoration.underline,
                 ),
               ),
@@ -438,7 +438,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     'LOG IN',
                     style: TextStyle(
                       color: Colors.white,
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.w600,
                       letterSpacing: 0.8,
                       fontSize: 13,
                     ),
@@ -454,7 +454,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 child: Text(
                   '← Back',
                   style: theme.textTheme.bodySmall?.copyWith(
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
               ),
@@ -464,7 +464,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   'Forgot password?',
                   style: TextStyle(
                     color: AppColors.primaryLight,
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.w600,
                     fontSize: 14,
                   ),
                 ),

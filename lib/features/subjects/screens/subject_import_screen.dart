@@ -117,7 +117,7 @@ class _SubjectImportScreenState extends State<SubjectImportScreen> {
               children: [
                 const Text(
                   'Paste Attendance Text',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
                 ),
                 const SizedBox(height: 16),
                 TextField(
@@ -167,7 +167,7 @@ class _SubjectImportScreenState extends State<SubjectImportScreen> {
                     'Extract Text',
                     style: TextStyle(
                       color: Colors.white,
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
                 ),
@@ -193,7 +193,7 @@ class _SubjectImportScreenState extends State<SubjectImportScreen> {
             'Import Subjects',
             style: TextStyle(
               color: Colors.white,
-              fontWeight: FontWeight.w600,
+              fontWeight: FontWeight.w500,
               fontFamily: 'Inter',
             ),
           ),
@@ -257,7 +257,7 @@ class _SubjectImportScreenState extends State<SubjectImportScreen> {
                       const SizedBox(height: 16),
                       Text(
                         _processingMessage,
-                        style: const TextStyle(fontWeight: FontWeight.bold),
+                        style: const TextStyle(fontWeight: FontWeight.w600),
                       ),
                     ],
                   ),
@@ -324,7 +324,7 @@ class _SubjectImportScreenState extends State<SubjectImportScreen> {
                   Text(
                     title,
                     style: const TextStyle(
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.w600,
                       fontSize: 16,
                     ),
                   ),

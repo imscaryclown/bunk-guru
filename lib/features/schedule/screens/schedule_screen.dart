@@ -175,7 +175,7 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
                                   d['label'] as String,
                                   style: TextStyle(
                                     fontSize: 9.5,
-                                    fontWeight: FontWeight.bold,
+                                    fontWeight: FontWeight.w600,
                                     color: isActive
                                         ? AppColors.primaryFixed
                                         : AppColors.outlineLight,
@@ -186,7 +186,7 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
                                   '${d['date']}',
                                   style: TextStyle(
                                     fontSize: 18,
-                                    fontWeight: FontWeight.bold,
+                                    fontWeight: FontWeight.w600,
                                     color: isActive
                                         ? Colors.white
                                         : (isDark
@@ -210,11 +210,11 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
               child: daySlots.isEmpty
                   ? _buildEmptySchedule()
                   : ListView.builder(
-                      padding: const EdgeInsets.only(
+                      padding: EdgeInsets.only(
                         left: 20.0,
                         right: 20.0,
                         top: 16.0,
-                        bottom: 150.0,
+                        bottom: 160.0 + MediaQuery.of(context).padding.bottom,
                       ),
                       itemCount: daySlots.length,
                       itemBuilder: (context, index) {
@@ -258,7 +258,7 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
                                               ? AppColors.outlineDark
                                               : AppColors.outlineLight,
                                           fontSize: 9,
-                                          fontWeight: FontWeight.w600,
+                                          fontWeight: FontWeight.w500,
                                         ),
                                       ),
                                     ],
@@ -340,7 +340,7 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
                                                       sub.name,
                                                       style: const TextStyle(
                                                         fontWeight:
-                                                            FontWeight.bold,
+                                                            FontWeight.w600,
                                                         fontSize: 14,
                                                       ),
                                                       maxLines: 1,
@@ -368,7 +368,7 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
                                                                 .outlineLight,
                                                             fontSize: 10,
                                                             fontWeight:
-                                                                FontWeight.bold,
+                                                                FontWeight.w600,
                                                           ),
                                                         ),
                                                         const SizedBox(
@@ -395,7 +395,7 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
                                                                 .primaryLight,
                                                             fontSize: 10,
                                                             fontWeight:
-                                                                FontWeight.bold,
+                                                                FontWeight.w600,
                                                           ),
                                                         ),
                                                       ],
@@ -421,19 +421,19 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
         ),
       ),
       floatingActionButton: Padding(
-        padding: const EdgeInsets.only(bottom: 84.0),
+        padding: EdgeInsets.only(
+          bottom: 100.0 + MediaQuery.of(context).padding.bottom,
+        ),
         child: Container(
           height: 48,
           margin: const EdgeInsets.symmetric(horizontal: 32.0),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(24.0),
-            gradient: const LinearGradient(
-              colors: [Color(0xFF3525CD), Color(0xFFB4136D)],
-            ),
+            color: const Color(0xFF4F46E5),
             boxShadow: [
               BoxShadow(
-                color: const Color(0xFF3525CD).withValues(alpha: 0.3),
-                blurRadius: 12,
+                color: const Color(0xFF4F46E5).withValues(alpha: 0.35),
+                blurRadius: 14,
                 offset: const Offset(0, 4),
               ),
             ],
@@ -455,7 +455,7 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
                       'ADD TIME SLOT',
                       style: TextStyle(
                         color: Colors.white,
-                        fontWeight: FontWeight.bold,
+                        fontWeight: FontWeight.w600,
                         fontSize: 13,
                       ),
                     ),
@@ -491,7 +491,7 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
           const SizedBox(height: 16),
           const Text(
             'No Classes Today',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+            style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
           ),
           const SizedBox(height: 6),
           const Text(
@@ -560,7 +560,7 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
                   const SizedBox(height: 16),
                   const Text(
                     'Add Time Slot',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
                   ),
                   const SizedBox(height: 16),
 
@@ -569,7 +569,7 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
                     'SUBJECT',
                     style: TextStyle(
                       fontSize: 10,
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.w600,
                       color: AppColors.outlineLight,
                     ),
                   ),
@@ -610,7 +610,7 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
                     'DAY',
                     style: TextStyle(
                       fontSize: 10,
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.w600,
                       color: AppColors.outlineLight,
                     ),
                   ),
@@ -651,7 +651,7 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
                     'CLASS TYPE',
                     style: TextStyle(
                       fontSize: 10,
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.w600,
                       color: AppColors.outlineLight,
                     ),
                   ),
@@ -677,7 +677,7 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
                               color: selectedType == 'theory'
                                   ? AppColors.primaryLight
                                   : AppColors.outlineLight,
-                              fontWeight: FontWeight.bold,
+                              fontWeight: FontWeight.w600,
                               fontSize: 12,
                             ),
                           ),
@@ -703,7 +703,7 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
                               color: selectedType == 'practical'
                                   ? AppColors.primaryLight
                                   : AppColors.outlineLight,
-                              fontWeight: FontWeight.bold,
+                              fontWeight: FontWeight.w600,
                               fontSize: 12,
                             ),
                           ),
@@ -747,9 +747,7 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
 
                   // Submit
                   CustomButton(
-                    gradient: const LinearGradient(
-                      colors: [Color(0xFF4F46E5), Color(0xFFB4136D)],
-                    ),
+                    color: const Color(0xFF4F46E5),
                     onTap: () async {
                       if (selectedSubjectId.isEmpty) return;
                       await ref
@@ -771,7 +769,7 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
                       'ADD SLOT',
                       style: TextStyle(
                         color: Colors.white,
-                        fontWeight: FontWeight.bold,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
                   ),
@@ -834,7 +832,7 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
                   const SizedBox(height: 16),
                   const Text(
                     'Edit Time Slot',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
                   ),
                   const SizedBox(height: 16),
 
@@ -843,7 +841,7 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
                     'SUBJECT',
                     style: TextStyle(
                       fontSize: 10,
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.w600,
                       color: AppColors.outlineLight,
                     ),
                   ),
@@ -884,7 +882,7 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
                     'DAY',
                     style: TextStyle(
                       fontSize: 10,
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.w600,
                       color: AppColors.outlineLight,
                     ),
                   ),
@@ -925,7 +923,7 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
                     'CLASS TYPE',
                     style: TextStyle(
                       fontSize: 10,
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.w600,
                       color: AppColors.outlineLight,
                     ),
                   ),
@@ -951,7 +949,7 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
                               color: selectedType == 'theory'
                                   ? AppColors.primaryLight
                                   : AppColors.outlineLight,
-                              fontWeight: FontWeight.bold,
+                              fontWeight: FontWeight.w600,
                               fontSize: 12,
                             ),
                           ),
@@ -977,7 +975,7 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
                               color: selectedType == 'practical'
                                   ? AppColors.primaryLight
                                   : AppColors.outlineLight,
-                              fontWeight: FontWeight.bold,
+                              fontWeight: FontWeight.w600,
                               fontSize: 12,
                             ),
                           ),
@@ -1070,7 +1068,7 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
                             'DELETE',
                             style: TextStyle(
                               color: Colors.red,
-                              fontWeight: FontWeight.bold,
+                              fontWeight: FontWeight.w600,
                               fontSize: 12,
                             ),
                           ),
@@ -1080,9 +1078,7 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
                       Expanded(
                         flex: 2,
                         child: CustomButton(
-                          gradient: const LinearGradient(
-                            colors: [Color(0xFF4F46E5), Color(0xFFB4136D)],
-                          ),
+                          color: const Color(0xFF4F46E5),
                           onTap: () async {
                             await ref
                                 .read(scheduleProvider.notifier)
@@ -1103,7 +1099,7 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
                             'SAVE CHANGES',
                             style: TextStyle(
                               color: Colors.white,
-                              fontWeight: FontWeight.bold,
+                              fontWeight: FontWeight.w600,
                               fontSize: 12,
                             ),
                           ),
@@ -1166,7 +1162,7 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
                   const SizedBox(height: 16),
                   const Text(
                     'Batch Schedule',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
                   ),
                   const SizedBox(height: 4),
                   const Text(
@@ -1199,7 +1195,7 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
                           'Load Class Schedule',
                           style: TextStyle(
                             color: AppColors.primaryLight,
-                            fontWeight: FontWeight.bold,
+                            fontWeight: FontWeight.w600,
                             fontSize: 14,
                           ),
                         ),
@@ -1224,7 +1220,7 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
                                       : Colors.white,
                                 ),
                                 style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
+                                  fontWeight: FontWeight.w600,
                                   letterSpacing: 2,
                                 ),
                               ),
@@ -1284,7 +1280,7 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
                                 child: const Text(
                                   'LOAD',
                                   style: TextStyle(
-                                    fontWeight: FontWeight.bold,
+                                    fontWeight: FontWeight.w600,
                                     fontSize: 12,
                                   ),
                                 ),
@@ -1318,7 +1314,7 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
                         const Text(
                           'Share My Schedule',
                           style: TextStyle(
-                            fontWeight: FontWeight.bold,
+                            fontWeight: FontWeight.w600,
                             fontSize: 14,
                           ),
                         ),
@@ -1374,7 +1370,7 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
                                     'GENERATE SHARE CODE',
                                     style: TextStyle(
                                       color: AppColors.primaryLight,
-                                      fontWeight: FontWeight.bold,
+                                      fontWeight: FontWeight.w600,
                                       fontSize: 12,
                                     ),
                                   ),
@@ -1396,7 +1392,7 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
                                   style: TextStyle(
                                     color: AppColors.outlineLight,
                                     fontSize: 10,
-                                    fontWeight: FontWeight.w600,
+                                    fontWeight: FontWeight.w500,
                                   ),
                                 ),
                                 const SizedBox(height: 4),
@@ -1405,7 +1401,7 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
                                   style: const TextStyle(
                                     color: AppColors.primaryLight,
                                     fontSize: 26,
-                                    fontWeight: FontWeight.w700,
+                                    fontWeight: FontWeight.w600,
                                     letterSpacing: 4,
                                   ),
                                 ),

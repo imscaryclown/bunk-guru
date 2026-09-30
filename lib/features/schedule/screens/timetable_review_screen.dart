@@ -134,7 +134,7 @@ class _TimetableReviewScreenState extends ConsumerState<TimetableReviewScreen> {
       appBar: AppBar(
         title: const Text(
           'Review Imported Schedule',
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+          style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
         ),
       ),
       body: _isSaving
@@ -182,7 +182,7 @@ class _TimetableReviewScreenState extends ConsumerState<TimetableReviewScreen> {
                                       color: avgConfidence > 0.8
                                           ? const Color(0xFF16A34A)
                                           : AppColors.redBg,
-                                      fontWeight: FontWeight.bold,
+                                      fontWeight: FontWeight.w600,
                                     ),
                                   ),
                                 ],
@@ -236,7 +236,7 @@ class _TimetableReviewScreenState extends ConsumerState<TimetableReviewScreen> {
                             ),
                             child: const Text(
                               'Cancel',
-                              style: TextStyle(fontWeight: FontWeight.bold),
+                              style: TextStyle(fontWeight: FontWeight.w600),
                             ),
                           ),
                         ),
@@ -256,7 +256,7 @@ class _TimetableReviewScreenState extends ConsumerState<TimetableReviewScreen> {
                               'Import All ✓',
                               style: TextStyle(
                                 color: Colors.white,
-                                fontWeight: FontWeight.bold,
+                                fontWeight: FontWeight.w600,
                               ),
                             ),
                           ),
@@ -290,7 +290,7 @@ class _TimetableReviewScreenState extends ConsumerState<TimetableReviewScreen> {
               Text(
                 'Existing Schedule Detected',
                 style: TextStyle(
-                  fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.w600,
                   color: AppColors.primaryFixed,
                 ),
               ),
@@ -300,7 +300,7 @@ class _TimetableReviewScreenState extends ConsumerState<TimetableReviewScreen> {
           RadioListTile<String>(
             title: const Text(
               'Merge',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+              style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
             ),
             subtitle: const Text(
               'Add new classes, keep existing ones',
@@ -314,7 +314,7 @@ class _TimetableReviewScreenState extends ConsumerState<TimetableReviewScreen> {
           RadioListTile<String>(
             title: const Text(
               'Start Fresh',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+              style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
             ),
             subtitle: const Text(
               'Delete old schedule, keep attendance history',
@@ -347,7 +347,7 @@ class _TimetableReviewScreenState extends ConsumerState<TimetableReviewScreen> {
         children: [
           Text(
             days[dayOfWeek],
-            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
           ),
           const SizedBox(height: 12),
           ...slots.map((s) => _buildSlotCard(s, isDark)),
@@ -384,7 +384,7 @@ class _TimetableReviewScreenState extends ConsumerState<TimetableReviewScreen> {
                 Text(
                   '${TimeFormatter.formatTime(slot.startTime)} - ${slot.subjectName}',
                   style: const TextStyle(
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.w600,
                     fontSize: 15,
                   ),
                 ),

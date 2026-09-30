@@ -111,7 +111,7 @@ class _SubjectReviewScreenState extends ConsumerState<SubjectReviewScreen> {
       appBar: AppBar(
         title: const Text(
           'Review Imported Subjects',
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+          style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
         ),
       ),
       body: _isSaving
@@ -159,7 +159,7 @@ class _SubjectReviewScreenState extends ConsumerState<SubjectReviewScreen> {
                                       color: avgConfidence > 0.8
                                           ? const Color(0xFF16A34A)
                                           : AppColors.redBg,
-                                      fontWeight: FontWeight.bold,
+                                      fontWeight: FontWeight.w600,
                                     ),
                                   ),
                                 ],
@@ -212,7 +212,7 @@ class _SubjectReviewScreenState extends ConsumerState<SubjectReviewScreen> {
                             ),
                             child: const Text(
                               'Cancel',
-                              style: TextStyle(fontWeight: FontWeight.bold),
+                              style: TextStyle(fontWeight: FontWeight.w600),
                             ),
                           ),
                         ),
@@ -232,7 +232,7 @@ class _SubjectReviewScreenState extends ConsumerState<SubjectReviewScreen> {
                               'Import All ✓',
                               style: TextStyle(
                                 color: Colors.white,
-                                fontWeight: FontWeight.bold,
+                                fontWeight: FontWeight.w600,
                               ),
                             ),
                           ),
@@ -264,7 +264,7 @@ class _SubjectReviewScreenState extends ConsumerState<SubjectReviewScreen> {
               Text(
                 'Existing Subjects Detected',
                 style: TextStyle(
-                  fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.w600,
                   color: AppColors.redBg,
                 ),
               ),
@@ -274,7 +274,7 @@ class _SubjectReviewScreenState extends ConsumerState<SubjectReviewScreen> {
           RadioListTile<String>(
             title: const Text(
               'Merge',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+              style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
             ),
             subtitle: const Text(
               'Add new subjects, skip duplicates',
@@ -289,7 +289,7 @@ class _SubjectReviewScreenState extends ConsumerState<SubjectReviewScreen> {
           RadioListTile<String>(
             title: const Text(
               'Start Fresh (DANGER)',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+              style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
             ),
             subtitle: const Text(
               'Deletes all existing subjects AND schedule slots before importing.',
@@ -337,7 +337,7 @@ class _SubjectReviewScreenState extends ConsumerState<SubjectReviewScreen> {
                 child: Text(
                   subject.subjectName,
                   style: const TextStyle(
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.w600,
                     fontSize: 16,
                   ),
                 ),
@@ -366,7 +366,7 @@ class _SubjectReviewScreenState extends ConsumerState<SubjectReviewScreen> {
                 'Theory: ${subject.attendedClasses}/${subject.totalClasses} (${theoryPct.toStringAsFixed(1)}%)',
                 style: const TextStyle(
                   fontSize: 13,
-                  fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
               if (subject.hasPractical)
@@ -375,7 +375,7 @@ class _SubjectReviewScreenState extends ConsumerState<SubjectReviewScreen> {
                   style: const TextStyle(
                     fontSize: 13,
                     color: Color(0xFF006A7C),
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
             ],

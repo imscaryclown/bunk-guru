@@ -105,7 +105,7 @@ class AppTheme {
         fontSize: 32,
         height: 1.2,
         letterSpacing: -0.64, // -0.02em
-        fontWeight: FontWeight.w600,
+        fontWeight: FontWeight.w500,
         color: mainColor,
       ),
       // h2 equivalent
@@ -113,7 +113,7 @@ class AppTheme {
         fontSize: 24,
         height: 1.3,
         letterSpacing: -0.24,
-        fontWeight: FontWeight.w600,
+        fontWeight: FontWeight.w500,
         color: mainColor,
       ),
       // body-lg equivalent
@@ -135,7 +135,7 @@ class AppTheme {
         fontSize: 12,
         height: 1.0,
         letterSpacing: 0.6, // 0.05em
-        fontWeight: FontWeight.w500,
+        fontWeight: FontWeight.w400,
         color: mutedColor,
       ),
       // auxiliary support styles
@@ -148,7 +148,7 @@ class AppTheme {
       labelMedium: GoogleFonts.inter(
         fontSize: 11,
         height: 1.0,
-        fontWeight: FontWeight.w500,
+        fontWeight: FontWeight.w400,
         color: mutedColor,
       ),
     );

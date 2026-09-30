@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/services.dart';
 import '../../../core/constants/colors.dart';
-import '../../../core/utils/attendance_math.dart';
 import '../../../core/utils/time_formatter.dart';
 import '../../../services/providers.dart';
 import '../../../services/supabase_service.dart';
@@ -330,7 +328,7 @@ class _CalendarHeatmapScreenState extends ConsumerState<CalendarHeatmapScreen> {
                     DateFormat('MMMM yyyy').format(_currentMonth),
                     style: const TextStyle(
                       fontSize: 16,
-                      fontWeight: FontWeight.w600,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
                   HeaderIconButton(
@@ -436,7 +434,7 @@ class _CalendarHeatmapScreenState extends ConsumerState<CalendarHeatmapScreen> {
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         color: AppColors.outlineLight,
-                        fontWeight: FontWeight.bold,
+                        fontWeight: FontWeight.w600,
                         fontSize: 12,
                       ),
                     ),
@@ -489,7 +487,8 @@ class _CalendarHeatmapScreenState extends ConsumerState<CalendarHeatmapScreen> {
   ) {
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
-    final isToday = date.year == today.year &&
+    final isToday =
+        date.year == today.year &&
         date.month == today.month &&
         date.day == today.day;
     final isFuture = date.isAfter(today);
@@ -518,8 +517,8 @@ class _CalendarHeatmapScreenState extends ConsumerState<CalendarHeatmapScreen> {
         color: isToday
             ? (isDark ? AppColors.primaryDark : AppColors.primaryLight)
             : (isDark
-                ? const Color(0xFF3B82F6).withValues(alpha: 0.4)
-                : const Color(0xFF818CF8).withValues(alpha: 0.5)),
+                  ? const Color(0xFF3B82F6).withValues(alpha: 0.4)
+                  : const Color(0xFF818CF8).withValues(alpha: 0.5)),
         width: isToday ? 2 : 1,
       );
     } else if (items.isNotEmpty) {
@@ -581,8 +580,8 @@ class _CalendarHeatmapScreenState extends ConsumerState<CalendarHeatmapScreen> {
               color: textColor,
               fontSize: 12,
               fontWeight: (isToday || items.isNotEmpty)
-                  ? FontWeight.bold
-                  : FontWeight.w600,
+                  ? FontWeight.w600
+                  : FontWeight.w500,
             ),
           ),
         ),
@@ -625,7 +624,7 @@ class _CalendarHeatmapScreenState extends ConsumerState<CalendarHeatmapScreen> {
           style: const TextStyle(
             fontSize: 11,
             color: AppColors.outlineLight,
-            fontWeight: FontWeight.bold,
+            fontWeight: FontWeight.w600,
           ),
         ),
       ],
@@ -651,13 +650,13 @@ class _CalendarHeatmapScreenState extends ConsumerState<CalendarHeatmapScreen> {
             style: const TextStyle(
               color: AppColors.outlineLight,
               fontSize: 11,
-              fontWeight: FontWeight.w600,
+              fontWeight: FontWeight.w500,
             ),
           ),
           const SizedBox(height: 4),
           Text(
             value,
-            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
           ),
         ],
       ),
@@ -727,7 +726,7 @@ class _CalendarHeatmapScreenState extends ConsumerState<CalendarHeatmapScreen> {
                 dateLabel,
                 style: const TextStyle(
                   fontSize: 18,
-                  fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
               const SizedBox(height: 4),
@@ -736,7 +735,7 @@ class _CalendarHeatmapScreenState extends ConsumerState<CalendarHeatmapScreen> {
                 style: const TextStyle(
                   color: AppColors.outlineLight,
                   fontSize: 13,
-                  fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
               const SizedBox(height: 20),
@@ -831,7 +830,7 @@ class _CalendarHeatmapScreenState extends ConsumerState<CalendarHeatmapScreen> {
                   Text(
                     subject.name,
                     style: const TextStyle(
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.w600,
                       fontSize: 13.5,
                     ),
                     maxLines: 1,
@@ -851,7 +850,7 @@ class _CalendarHeatmapScreenState extends ConsumerState<CalendarHeatmapScreen> {
                         style: const TextStyle(
                           color: AppColors.outlineLight,
                           fontSize: 9.5,
-                          fontWeight: FontWeight.bold,
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
                     ],
@@ -875,7 +874,7 @@ class _CalendarHeatmapScreenState extends ConsumerState<CalendarHeatmapScreen> {
                     statusLabel.toUpperCase(),
                     style: TextStyle(
                       color: statusColor,
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.w600,
                       fontSize: 8.5,
                       letterSpacing: 0.2,
                     ),
@@ -944,7 +943,7 @@ class _CalendarHeatmapScreenState extends ConsumerState<CalendarHeatmapScreen> {
                 subject.name,
                 style: const TextStyle(
                   fontSize: 18,
-                  fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
               const SizedBox(height: 4),
@@ -953,7 +952,7 @@ class _CalendarHeatmapScreenState extends ConsumerState<CalendarHeatmapScreen> {
                 style: const TextStyle(
                   color: AppColors.outlineLight,
                   fontSize: 12,
-                  fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
               const SizedBox(height: 20),
@@ -1059,7 +1058,7 @@ class _CalendarHeatmapScreenState extends ConsumerState<CalendarHeatmapScreen> {
             Text(
               label,
               style: TextStyle(
-                fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
                 color: isSelected
                     ? activeColor
                     : (isDark

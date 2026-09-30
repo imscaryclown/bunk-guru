@@ -117,7 +117,7 @@ class _TimetableImportScreenState extends State<TimetableImportScreen> {
               children: [
                 const Text(
                   'Paste Timetable Text',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
                 ),
                 const SizedBox(height: 16),
                 TextField(
@@ -157,7 +157,7 @@ class _TimetableImportScreenState extends State<TimetableImportScreen> {
                     'Parse Text',
                     style: TextStyle(
                       color: Colors.white,
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
                 ),
@@ -183,7 +183,7 @@ class _TimetableImportScreenState extends State<TimetableImportScreen> {
             'Import Timetable',
             style: TextStyle(
               color: Colors.white,
-              fontWeight: FontWeight.w600,
+              fontWeight: FontWeight.w500,
               fontFamily: 'Inter',
             ),
           ),
@@ -247,7 +247,7 @@ class _TimetableImportScreenState extends State<TimetableImportScreen> {
                       const SizedBox(height: 16),
                       Text(
                         _processingMessage,
-                        style: const TextStyle(fontWeight: FontWeight.bold),
+                        style: const TextStyle(fontWeight: FontWeight.w600),
                       ),
                     ],
                   ),
@@ -314,7 +314,7 @@ class _TimetableImportScreenState extends State<TimetableImportScreen> {
                   Text(
                     title,
                     style: const TextStyle(
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.w600,
                       fontSize: 16,
                     ),
                   ),

@@ -66,22 +66,17 @@ class _AttendanceRingState extends State<AttendanceRing>
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
 
-    final Color statusColor = AttendanceMath.getStatusColor(widget.status);
-    final String label = AttendanceMath.getStatusLabel(widget.status);
+    final bool isLow = widget.status == AttendanceStatus.danger ||
+        (widget.percentage < 75.0 && widget.percentage > 0);
+    final Color statusColor = isLow
+        ? const Color(0xFFDC2626)
+        : const Color(0xFF16A34A);
+    final String label = isLow ? 'DANGER ZONE' : 'ON TRACK';
 
-    // Dynamic gradient colors
-    List<Color> gradientColors;
-    switch (widget.status) {
-      case AttendanceStatus.danger:
-        gradientColors = [const Color(0xFFBA1A1A), const Color(0xFFFD56A7)];
-        break;
-      case AttendanceStatus.warning:
-        gradientColors = [const Color(0xFFEAB308), const Color(0xFFF59E0B)];
-        break;
-      case AttendanceStatus.safe:
-        gradientColors = [const Color(0xFF22C55E), const Color(0xFF16A34A)];
-        break;
-    }
+    // 2 colors only: Red for low attendance (<75%), Green for 75% or more
+    final List<Color> gradientColors = isLow
+        ? [const Color(0xFFEF4444), const Color(0xFFDC2626)]
+        : [const Color(0xFF22C55E), const Color(0xFF16A34A)];
 
     return SizedBox(
       width: widget.size,
@@ -112,7 +107,7 @@ class _AttendanceRingState extends State<AttendanceRing>
                 '${widget.percentage.toStringAsFixed(2)}%',
                 style: theme.textTheme.displayLarge?.copyWith(
                   color: statusColor,
-                  fontWeight: FontWeight.w600,
+                  fontWeight: FontWeight.w500,
                   fontSize: widget.size * 0.16,
                 ),
               ),

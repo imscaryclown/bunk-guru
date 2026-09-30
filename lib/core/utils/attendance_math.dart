@@ -28,21 +28,19 @@ class AttendanceMath {
     return result < 0 ? 0 : result;
   }
 
-  // Status: 'safe' (>=80%), 'warning' (75-80%), 'danger' (<75%)
+  // Status: 'safe' (>=75%), 'danger' (<75%)
   static AttendanceStatus getStatus(int attended, int total) {
     if (total <= 0) return AttendanceStatus.safe;
     final double pct = (attended / total) * 100;
-    if (pct >= 80.0) return AttendanceStatus.safe;
-    if (pct >= 75.0) return AttendanceStatus.warning;
+    if (pct >= 75.0) return AttendanceStatus.safe;
     return AttendanceStatus.danger;
   }
 
   static String getStatusLabel(AttendanceStatus status) {
     switch (status) {
       case AttendanceStatus.safe:
-        return 'ON TRACK';
       case AttendanceStatus.warning:
-        return 'CAUTION';
+        return 'ON TRACK';
       case AttendanceStatus.danger:
         return 'DANGER ZONE';
     }
@@ -50,12 +48,9 @@ class AttendanceMath {
 
   static String getStatusMessage(int attended, int total) {
     final AttendanceStatus status = getStatus(attended, total);
-    if (status == AttendanceStatus.safe) {
+    if (status == AttendanceStatus.safe || status == AttendanceStatus.warning) {
       final int bunks = safeBunks(attended, total);
       return 'You can skip $bunks class${bunks != 1 ? 'es' : ''} safely';
-    }
-    if (status == AttendanceStatus.warning) {
-      return 'Attend next class to be safe';
     }
     final int needed = requiredClasses(attended, total);
     return 'Attend next $needed class${needed != 1 ? 'es' : ''} to reach 75%';
@@ -64,20 +59,18 @@ class AttendanceMath {
   static Color getStatusColor(AttendanceStatus status) {
     switch (status) {
       case AttendanceStatus.safe:
-        return const Color(0xFF22C55E); // Green
       case AttendanceStatus.warning:
-        return const Color(0xFFEAB308); // Yellow
+        return const Color(0xFF22C55E); // Green
       case AttendanceStatus.danger:
-        return const Color(0xFFBA1A1A); // Red
+        return const Color(0xFFDC2626); // Red
     }
   }
 
   static IconData getStatusIcon(AttendanceStatus status) {
     switch (status) {
       case AttendanceStatus.safe:
-        return Icons.check_circle;
       case AttendanceStatus.warning:
-        return Icons.warning;
+        return Icons.check_circle;
       case AttendanceStatus.danger:
         return Icons.error;
     }
