@@ -62,17 +62,12 @@ class _CalculatorScreenState extends ConsumerState<CalculatorScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: ShaderMask(
-          shaderCallback: (bounds) => const LinearGradient(
-            colors: [Color(0xFF4F46E5), Color(0xFFB4136D)],
-          ).createShader(bounds),
-          child: const Text(
-            'Bunk Calculator',
-            style: TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.w500,
-              fontFamily: 'Inter',
-            ),
+        title: Text(
+          'Bunk Calculator',
+          style: TextStyle(
+            color: isDark ? AppColors.textMainDark : AppColors.textMainLight,
+            fontWeight: FontWeight.w500,
+            fontFamily: 'Inter',
           ),
         ),
       ),

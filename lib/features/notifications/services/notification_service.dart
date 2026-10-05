@@ -38,6 +38,7 @@ class Persona {
 class NotificationService {
   static final FlutterLocalNotificationsPlugin _plugin = FlutterLocalNotificationsPlugin();
   static bool _initialized = false;
+  static bool _exactAlarmGranted = false;
 
   // ===== PERSONAS DATABASE =====
   static final Map<String, Persona> personas = {
@@ -298,7 +299,7 @@ class NotificationService {
       if (androidPlugin != null) {
         await androidPlugin.createNotificationChannel(
           const AndroidNotificationChannel(
-            'bunk_mitra_reminders',
+            'bunk_guru_reminders',
             'Class Reminders',
             description: 'Meme-worthy reminders before your classes',
             importance: Importance.high,
@@ -309,7 +310,7 @@ class NotificationService {
 
         await androidPlugin.createNotificationChannel(
           const AndroidNotificationChannel(
-            'bunk_mitra_morning',
+            'bunk_guru_morning',
             'Morning Briefing',
             description: 'Daily attendance summary with personality',
             importance: Importance.defaultImportance,
@@ -322,9 +323,11 @@ class NotificationService {
 
     _initialized = true;
 
-    // Reschedule if enabled
+    // Reschedule if enabled — but first ensure we have OS-level permission.
+    // Without this, zonedSchedule silently does nothing on Android 13+.
     if (LocalStorageService.isNotificationEnabled) {
       try {
+        await requestPermission();
         await scheduleAll();
       } catch (e) {
         // Suppress and log error to avoid locking up application startup
@@ -348,10 +351,12 @@ class NotificationService {
         // Without this, zonedSchedule with exactAllowWhileIdle silently fails
         try {
           final bool? exactAlarmGranted = await androidPlugin.requestExactAlarmsPermission();
-          if (exactAlarmGranted != true) {
+          _exactAlarmGranted = exactAlarmGranted == true;
+          if (!_exactAlarmGranted) {
             debugPrint('NotificationService: Exact alarm permission not granted, will use inexact scheduling');
           }
         } catch (e) {
+          _exactAlarmGranted = false;
           debugPrint('NotificationService: requestExactAlarmsPermission error: $e');
         }
 
@@ -393,7 +398,7 @@ class NotificationService {
 
     const AndroidNotificationDetails androidPlatformChannelSpecifics =
         AndroidNotificationDetails(
-      'bunk_mitra_reminders',
+      'bunk_guru_reminders',
       'Class Reminders',
       channelDescription: 'Meme-worthy reminders before your classes',
       importance: Importance.high,
@@ -589,7 +594,7 @@ class NotificationService {
                 title: '📚 ${subject.name}',
                 body: body,
                 scheduledDate: scheduledTZDate,
-                channelId: 'bunk_mitra_reminders',
+                channelId: 'bunk_guru_reminders',
                 channelName: 'Class Reminders',
                 channelDesc: 'Meme-worthy reminders before your classes',
                 highPriority: true,
@@ -638,10 +643,10 @@ class NotificationService {
               final int currentMorningId = idCounter++;
               final bool scheduled = await _scheduleNotification(
                 id: currentMorningId,
-                title: '🌅 Bunk Mitra — Daily Briefing',
+                title: '🌅 Bunk Guru — Daily Briefing',
                 body: body,
                 scheduledDate: scheduledTZDate,
-                channelId: 'bunk_mitra_morning',
+                channelId: 'bunk_guru_morning',
                 channelName: 'Morning Briefing',
                 channelDesc: 'Daily attendance summary with personality',
                 highPriority: false,
@@ -689,6 +694,13 @@ class NotificationService {
       ),
     );
 
+    // Use exact scheduling only when we know the permission was granted.
+    // On Android 12+, using exactAllowWhileIdle without the permission
+    // causes zonedSchedule to silently do nothing on many OEMs.
+    final AndroidScheduleMode scheduleMode = _exactAlarmGranted
+        ? AndroidScheduleMode.exactAllowWhileIdle
+        : AndroidScheduleMode.inexactAllowWhileIdle;
+
     try {
       await _plugin.zonedSchedule(
         id,
@@ -698,27 +710,32 @@ class NotificationService {
         notificationDetails,
         uiLocalNotificationDateInterpretation:
             UILocalNotificationDateInterpretation.absoluteTime,
-        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+        androidScheduleMode: scheduleMode,
       );
       return true;
     } catch (e) {
-      debugPrint('NotificationService: Exact alarm failed (id=$id), trying inexact: $e');
-      try {
-        await _plugin.zonedSchedule(
-          id,
-          title,
-          body,
-          scheduledDate,
-          notificationDetails,
-          uiLocalNotificationDateInterpretation:
-              UILocalNotificationDateInterpretation.absoluteTime,
-          androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
-        );
-        return true;
-      } catch (fallbackError) {
-        debugPrint('NotificationService: BOTH exact and inexact scheduling failed (id=$id): $fallbackError');
-        return false;
+      debugPrint('NotificationService: zonedSchedule failed (id=$id, mode=$scheduleMode): $e');
+      // If exact failed, try inexact as a last resort
+      if (scheduleMode == AndroidScheduleMode.exactAllowWhileIdle) {
+        try {
+          await _plugin.zonedSchedule(
+            id,
+            title,
+            body,
+            scheduledDate,
+            notificationDetails,
+            uiLocalNotificationDateInterpretation:
+                UILocalNotificationDateInterpretation.absoluteTime,
+            androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
+          );
+          _exactAlarmGranted = false; // Remember for future calls in this session
+          return true;
+        } catch (fallbackError) {
+          debugPrint('NotificationService: BOTH exact and inexact scheduling failed (id=$id): $fallbackError');
+          return false;
+        }
       }
+      return false;
     }
   }
 

@@ -13,7 +13,7 @@ class BunkAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   const BunkAppBar({
     super.key,
-    this.title = 'Bunk Mitra',
+    this.title = 'Bunk Guru',
     this.showBackButton = false,
     this.onBackTap,
     this.actions,
@@ -30,7 +30,7 @@ class BunkAppBar extends StatelessWidget implements PreferredSizeWidget {
     final bool isDark = Theme.of(context).brightness == Brightness.dark;
     final bool canPop = Navigator.canPop(context);
     final bool shouldShowBack = showBackButton ||
-        (showBackButton == false && leading == null && canPop && title != 'Bunk Mitra');
+        (showBackButton == false && leading == null && canPop && title != 'Bunk Guru' && title != 'Bunk Mitra');
 
     Widget? leadingWidget;
     if (leading != null) {
@@ -49,7 +49,7 @@ class BunkAppBar extends StatelessWidget implements PreferredSizeWidget {
       );
     }
 
-    final bool shouldShowLogo = showLogo && (title == 'Bunk Mitra');
+    final bool shouldShowLogo = showLogo && (title == 'Bunk Guru' || title == 'Bunk Mitra');
 
     return AppBar(
       elevation: 0,
@@ -66,24 +66,19 @@ class BunkAppBar extends StatelessWidget implements PreferredSizeWidget {
         children: [
           if (shouldShowLogo) ...[
             Icon(
-              Icons.school_rounded,
-              size: 24,
-              color: isDark ? AppColors.primaryDark : const Color(0xFF4F46E5),
+              Icons.school_outlined,
+              size: 26,
+              color: isDark ? const Color(0xFF818CF8) : const Color(0xFF4F46E5),
             ),
             const SizedBox(width: 8),
           ],
-          ShaderMask(
-            shaderCallback: (bounds) => const LinearGradient(
-              colors: [Color(0xFF4F46E5), Color(0xFFB4136D)],
-            ).createShader(bounds),
-            child: Text(
-              title,
-              style: GoogleFonts.inter(
-                color: Colors.white,
-                fontWeight: FontWeight.w600,
-                fontSize: 22,
-                letterSpacing: -0.5,
-              ),
+          Text(
+            title,
+            style: GoogleFonts.outfit(
+              color: isDark ? const Color(0xFF818CF8) : const Color(0xFF4F46E5),
+              fontWeight: FontWeight.w500,
+              fontSize: 24,
+              letterSpacing: -0.5,
             ),
           ),
         ],

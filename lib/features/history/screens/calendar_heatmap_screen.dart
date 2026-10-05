@@ -24,21 +24,6 @@ class CalendarHeatmapScreen extends ConsumerStatefulWidget {
 class _CalendarHeatmapScreenState extends ConsumerState<CalendarHeatmapScreen> {
   DateTime _currentMonth = DateTime(DateTime.now().year, DateTime.now().month);
 
-  void _toast(String msg, bool isSuccess) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(msg, textAlign: TextAlign.center),
-        backgroundColor: isSuccess
-            ? const Color(0xFF16A34A)
-            : AppColors.primaryContainer,
-        behavior: SnackBarBehavior.floating,
-        duration: const Duration(seconds: 2),
-        margin: const EdgeInsets.symmetric(horizontal: 48, vertical: 16),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      ),
-    );
-  }
-
   // Prepares history items (explicit logs + backfilled "Missed" entries for past 7 days)
   List<Map<String, dynamic>> _processHistory(
     Map<String, Map<String, AttendanceResponse>> allResponses,
@@ -302,7 +287,6 @@ class _CalendarHeatmapScreenState extends ConsumerState<CalendarHeatmapScreen> {
                   icon: Icons.refresh_rounded,
                   tooltip: 'Refresh Calendar',
                   onTap: () async {
-                    _toast('Refreshing history...', true);
                     try {
                       await SupabaseService.syncFromCloud(true);
                       ref.read(profileProvider.notifier).refresh();
@@ -1083,7 +1067,6 @@ class _CalendarHeatmapScreenState extends ConsumerState<CalendarHeatmapScreen> {
     String selectedStatus,
   ) async {
     Navigator.pop(context); // Close sheet
-    _toast('Updating attendance...', true);
 
     final newResponse = AttendanceResponse(
       id: oldResponse?.id ?? '',
@@ -1103,7 +1086,5 @@ class _CalendarHeatmapScreenState extends ConsumerState<CalendarHeatmapScreen> {
           oldResponse: isMissed ? null : oldResponse,
           newResponse: newResponse,
         );
-
-    _toast('Updated successfully!', true);
   }
 }

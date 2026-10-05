@@ -1,9 +1,9 @@
 <div align="center">
 
-# 🎓 Bunk Mitra
+# 🎓 Bunk Guru
 ### *Your Smart Attendance Assistant & Bunk Calculator*
 
-[![Download APK](https://img.shields.io/badge/Download-APK%20(Releases)-FF6F00?style=for-the-badge&logo=android&logoColor=white)](https://github.com/imscaryclown/bunk-mitra/releases/latest)
+[![Download APK](https://img.shields.io/badge/Download-APK%20(Releases)-FF6F00?style=for-the-badge&logo=android&logoColor=white)](https://github.com/imscaryclown/bunk-guru/releases/latest)
 [![Flutter](https://img.shields.io/badge/Flutter-3.x-02569B?style=for-the-badge&logo=flutter&logoColor=white)](https://flutter.dev)
 [![Dart](https://img.shields.io/badge/Dart-3.x-0175C2?style=for-the-badge&logo=dart&logoColor=white)](https://dart.dev)
 [![Supabase](https://img.shields.io/badge/Supabase-Backend-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)](https://supabase.com)
@@ -15,7 +15,7 @@
 
 <p align="center">
   <b>Never accidentally fall below 75% attendance again.</b><br>
-  Bunk Mitra simplifies student life by calculating safe bunks, managing weekly schedules, sending post-class check-in prompts, and leveraging Gemini AI to parse timetables directly from images.
+  Bunk Guru simplifies student life by calculating safe bunks, managing weekly schedules, sending post-class check-in prompts, and leveraging Gemini AI to parse timetables directly from images.
 </p>
 
 [Download APK](#-option-1-direct-download-recommended-for-users) •
@@ -66,13 +66,13 @@
 
 ---
 
-## 💡 Why Bunk Mitra?
+## 💡 Why Bunk Guru?
 
 Every college student knows the daily dilemma:
 > *"Kitne classes bunk kar sakte hain?"*  
 > *"Will my attendance drop below 75% if I miss today's 9 AM lecture?"*
 
-Miscalculations lead to attendance shortages, debarment, and unnecessary exam stress. **Bunk Mitra** gives students complete control with real-time tracking, intelligent bunk calculations, and automatic timetable extraction.
+Miscalculations lead to attendance shortages, debarment, and unnecessary exam stress. **Bunk Guru** gives students complete control with real-time tracking, intelligent bunk calculations, and automatic timetable extraction.
 
 ---
 
@@ -127,7 +127,7 @@ Miscalculations lead to attendance shortages, debarment, and unnecessary exam st
 
 ## 📂 Project Architecture
 
-Bunk Mitra follows a modular, **feature-first clean architecture**:
+Bunk Guru follows a modular, **feature-first clean architecture**:
 
 ```text
 lib/
@@ -157,10 +157,10 @@ lib/
 
 ### 📱 Option 1: Direct Download (Recommended for Users)
 
-If you simply want to install and use Bunk Mitra on your Android device:
+If you simply want to install and use Bunk Guru on your Android device:
 
-1. Go to the **[Latest GitHub Releases](https://github.com/imscaryclown/bunk-mitra/releases/latest)** page.
-2. Download the latest `bunk-mitra.apk`.
+1. Go to the **[Latest GitHub Releases](https://github.com/imscaryclown/bunk-guru/releases/latest)** page.
+2. Download the latest `bunk-guru.apk` (or the architecture-specific APK for your device).
 3. Tap on the downloaded file on your Android device to install. *(If prompted, allow "Install from unknown sources" in settings)*.
 4. Open the app, set up your schedule or snap a picture with AI, and you're good to go! 🎉
 
@@ -178,8 +178,8 @@ If you want to contribute, modify code, or run locally on an emulator:
 
 #### 📥 1. Clone the Repository
 ```bash
-git clone https://github.com/imscaryclown/bunk-mitra.git
-cd bunk-mitra
+git clone https://github.com/imscaryclown/bunk-guru.git
+cd bunk-guru
 ```
 
 #### 📦 2. Install Dependencies
@@ -211,7 +211,7 @@ flutter run
 
 ## 👥 Meet the Team
 
-Bunk Mitra was conceptualized and built with ❤️ by students from **Galgotias University**:
+Bunk Guru was conceptualized and built with ❤️ by students from **Galgotias University**:
 
 <div align="center">
 <table>

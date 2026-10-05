@@ -12,9 +12,9 @@ import '../../../services/providers.dart';
 import '../../../services/supabase_service.dart';
 import '../../../models/subject.dart';
 
-
 import '../../../widgets/page_header.dart';
 import '../../../widgets/header_icon_button.dart';
+import '../../../widgets/batch_import_success_dialog.dart';
 
 class SubjectsScreen extends ConsumerStatefulWidget {
   const SubjectsScreen({super.key});
@@ -79,7 +79,7 @@ class _SubjectsScreenState extends ConsumerState<SubjectsScreen> {
                         20.0,
                         8.0,
                         20.0,
-                        160.0 + MediaQuery.of(context).padding.bottom,
+                        120.0 + MediaQuery.of(context).padding.bottom,
                       ),
                       itemCount: subjects.length,
                       itemBuilder: (context, index) {
@@ -94,10 +94,7 @@ class _SubjectsScreenState extends ConsumerState<SubjectsScreen> {
 
       // ===== FAB ADD BUTTON =====
       floatingActionButton: Padding(
-        padding: EdgeInsets.only(
-          bottom: 100.0 + MediaQuery.of(context).padding.bottom,
-          right: 8.0,
-        ),
+        padding: const EdgeInsets.only(bottom: 93.0, right: 3.0),
         child: FloatingActionButton(
           shape: const CircleBorder(),
           backgroundColor: const Color(0xFF4F46E5),
@@ -427,25 +424,28 @@ class _SubjectsScreenState extends ConsumerState<SubjectsScreen> {
 
         return StatefulBuilder(
           builder: (context, setModalState) {
-            return Container(
+            return Padding(
               padding: EdgeInsets.only(
-                left: 20,
-                right: 20,
-                top: 12,
-                bottom: 24 + MediaQuery.of(context).viewInsets.bottom,
+                bottom: MediaQuery.of(context).viewInsets.bottom,
               ),
-              decoration: BoxDecoration(
-                color: isDark
-                    ? const Color(0xFF1D2022)
-                    : const Color(0xFFFFFFFF),
-                borderRadius: const BorderRadius.vertical(
-                  top: Radius.circular(24),
+              child: Container(
+                constraints: BoxConstraints(
+                  maxHeight: MediaQuery.of(context).size.height * 0.85,
                 ),
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
+                padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
+                decoration: BoxDecoration(
+                  color: isDark
+                      ? const Color(0xFF1D2022)
+                      : const Color(0xFFFFFFFF),
+                  borderRadius: const BorderRadius.vertical(
+                    top: Radius.circular(24),
+                  ),
+                ),
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
                   Center(
                     child: Container(
                       width: 40,
@@ -657,7 +657,6 @@ class _SubjectsScreenState extends ConsumerState<SubjectsScreen> {
 
                       if (mounted) {
                         Navigator.pop(context);
-                        _toast('Subject added!', true);
                       }
                     },
                     child: const Text(
@@ -669,9 +668,11 @@ class _SubjectsScreenState extends ConsumerState<SubjectsScreen> {
                     ),
                   ),
                 ],
+                ),
               ),
-            );
-          },
+            ),
+          );
+        },
         );
       },
     );
@@ -707,25 +708,28 @@ class _SubjectsScreenState extends ConsumerState<SubjectsScreen> {
             final double simPct = AttendanceMath.currentPercent(tA, tT);
             final String simMsg = AttendanceMath.getStatusMessage(tA, tT);
 
-            return Container(
+            return Padding(
               padding: EdgeInsets.only(
-                left: 20,
-                right: 20,
-                top: 12,
-                bottom: 24 + MediaQuery.of(context).viewInsets.bottom,
+                bottom: MediaQuery.of(context).viewInsets.bottom,
               ),
-              decoration: BoxDecoration(
-                color: isDark
-                    ? const Color(0xFF1D2022)
-                    : const Color(0xFFFFFFFF),
-                borderRadius: const BorderRadius.vertical(
-                  top: Radius.circular(24),
+              child: Container(
+                constraints: BoxConstraints(
+                  maxHeight: MediaQuery.of(context).size.height * 0.85,
                 ),
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
+                padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
+                decoration: BoxDecoration(
+                  color: isDark
+                      ? const Color(0xFF1D2022)
+                      : const Color(0xFFFFFFFF),
+                  borderRadius: const BorderRadius.vertical(
+                    top: Radius.circular(24),
+                  ),
+                ),
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
                   Center(
                     child: Container(
                       width: 40,
@@ -1116,7 +1120,6 @@ class _SubjectsScreenState extends ConsumerState<SubjectsScreen> {
                                   .delete(s.id);
                               if (mounted) {
                                 Navigator.pop(context);
-                                _toast('Subject deleted', false);
                               }
                             }
                           },
@@ -1158,7 +1161,6 @@ class _SubjectsScreenState extends ConsumerState<SubjectsScreen> {
 
                             if (mounted) {
                               Navigator.pop(context);
-                              _toast('Subject updated!', true);
                             }
                           },
                           child: const Text(
@@ -1175,8 +1177,10 @@ class _SubjectsScreenState extends ConsumerState<SubjectsScreen> {
                   ),
                 ],
               ),
-            );
-          },
+            ),
+          ),
+        );
+      },
         );
       },
     );
@@ -1196,25 +1200,28 @@ class _SubjectsScreenState extends ConsumerState<SubjectsScreen> {
 
         return StatefulBuilder(
           builder: (context, setModalState) {
-            return Container(
+            return Padding(
               padding: EdgeInsets.only(
-                left: 20,
-                right: 20,
-                top: 12,
-                bottom: 24 + MediaQuery.of(context).viewInsets.bottom,
+                bottom: MediaQuery.of(context).viewInsets.bottom,
               ),
-              decoration: BoxDecoration(
-                color: isDark
-                    ? const Color(0xFF1D2022)
-                    : const Color(0xFFFFFFFF),
-                borderRadius: const BorderRadius.vertical(
-                  top: Radius.circular(24),
+              child: Container(
+                constraints: BoxConstraints(
+                  maxHeight: MediaQuery.of(context).size.height * 0.85,
                 ),
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
+                padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
+                decoration: BoxDecoration(
+                  color: isDark
+                      ? const Color(0xFF1D2022)
+                      : const Color(0xFFFFFFFF),
+                  borderRadius: const BorderRadius.vertical(
+                    top: Radius.circular(24),
+                  ),
+                ),
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
                   Center(
                     child: Container(
                       width: 40,
@@ -1470,8 +1477,10 @@ class _SubjectsScreenState extends ConsumerState<SubjectsScreen> {
                   ),
                 ],
               ),
-            );
-          },
+            ),
+          ),
+        );
+      },
         );
       },
     );
@@ -1500,6 +1509,7 @@ class _SubjectsScreenState extends ConsumerState<SubjectsScreen> {
       backgroundColor: Colors.transparent,
       builder: (context) {
         final isDark = Theme.of(context).brightness == Brightness.dark;
+        bool isSubmitting = false;
 
         return StatefulBuilder(
           builder: (context, setModalState) {
@@ -1736,41 +1746,82 @@ class _SubjectsScreenState extends ConsumerState<SubjectsScreen> {
                   // Commit Sync Button
                   CustomButton(
                     color: const Color(0xFF4F46E5),
-                    onTap: () async {
-                      try {
-                        // Map counts back
-                        final List<dynamic> updatedSubjects = syncList.map((s) {
-                          final String id = s['id'] as String;
-                          return {
-                            ...s,
-                            'attended_classes': theoryCounts[id] ?? 0,
-                            'practical_attended': practicalCounts[id] ?? 0,
-                          };
-                        }).toList();
+                    onTap: isSubmitting
+                        ? null
+                        : () async {
+                            setModalState(() {
+                              isSubmitting = true;
+                            });
 
-                        await SupabaseService.commitSharedData(
-                          updatedSubjects,
-                          scheduleJson,
-                        );
+                            try {
+                              // Map counts back
+                              final List<dynamic> updatedSubjects = syncList.map((s) {
+                                final String id = s['id'] as String;
+                                return {
+                                  ...s,
+                                  'attended_classes': theoryCounts[id] ?? 0,
+                                  'practical_attended': practicalCounts[id] ?? 0,
+                                };
+                              }).toList();
 
-                        ref.read(subjectProvider.notifier).refresh();
-                        ref.read(scheduleProvider.notifier).refresh();
+                              await SupabaseService.commitSharedData(
+                                updatedSubjects,
+                                scheduleJson,
+                              );
 
-                        if (context.mounted) {
-                          Navigator.pop(context); // Close sync sheet
-                          _toast('Batch joined successfully! 🎉', true);
-                        }
-                      } catch (e) {
-                        _toast('Failed to join batch: $e', false);
-                      }
-                    },
-                    child: const Text(
-                      'LOAD DATA AND FINISH',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
+                              ref.read(subjectProvider.notifier).refresh();
+                              ref.read(scheduleProvider.notifier).refresh();
+
+                              if (context.mounted) {
+                                Navigator.pop(context); // Close sync sheet
+                                BatchImportSuccessDialog.show(
+                                  context: context,
+                                  title: 'Batch Joined Successfully!',
+                                  subtitle:
+                                      'Your course tracker and timetable are now synced with this batch.',
+                                  subjectCount: updatedSubjects.length,
+                                  slotCount: scheduleJson.length,
+                                );
+                              }
+                            } catch (e) {
+                              if (context.mounted) {
+                                setModalState(() {
+                                  isSubmitting = false;
+                                });
+                              }
+                              _toast('Failed to join batch: $e', false);
+                            }
+                          },
+                    child: isSubmitting
+                        ? const Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              SizedBox(
+                                height: 18,
+                                width: 18,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2.2,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              SizedBox(width: 10),
+                              Text(
+                                'LOADING DATA...',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 14,
+                                ),
+                              ),
+                            ],
+                          )
+                        : const Text(
+                            'LOAD DATA AND FINISH',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
                   ),
                 ],
               ),

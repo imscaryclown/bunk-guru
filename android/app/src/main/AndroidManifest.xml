@@ -3,11 +3,10 @@
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
     <uses-permission android:name="android.permission.VIBRATE"/>
-    <uses-permission android:name="android.permission.USE_EXACT_ALARM"/>
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM"/>
     
     <application
-        android:label="Bunk Mitra"
+        android:label="Bunk Guru"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
         android:roundIcon="@mipmap/ic_launcher_round">
@@ -38,6 +37,8 @@
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="com.mdalfaaz.bunkguru" android:host="login" />
+                <data android:scheme="com.bunkguru.app" android:host="login" />
                 <data android:scheme="com.mdalfaaz.bunkmitra" android:host="login" />
                 <data android:scheme="com.bunkmitra.app" android:host="login" />
             </intent-filter>

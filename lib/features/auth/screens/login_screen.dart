@@ -80,7 +80,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     try {
       await SupabaseService.client.auth.signInWithOAuth(
         sb.OAuthProvider.google,
-        redirectTo: 'com.mdalfaaz.bunkmitra://login',
+        redirectTo: 'com.mdalfaaz.bunkguru://login',
       );
     } catch (e) {
       setState(() {
@@ -169,7 +169,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     colors: [Color(0xFF4F46E5), Color(0xFFB4136D)],
                   ).createShader(bounds),
                   child: Text(
-                    'Bunk Mitra',
+                    'Bunk Guru',
                     style: theme.textTheme.displayLarge?.copyWith(
                       color: Colors.white,
                       fontSize: 36,

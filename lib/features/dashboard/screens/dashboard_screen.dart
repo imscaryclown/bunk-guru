@@ -24,8 +24,6 @@ class DashboardScreen extends ConsumerStatefulWidget {
 }
 
 class _DashboardScreenState extends ConsumerState<DashboardScreen> {
-  final Map<String, int> _promptSteps = {};
-
   void _toast(String msg, bool isSuccess) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -43,9 +41,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
-
     final profile = ref.watch(profileProvider);
     final subjects = ref.watch(subjectProvider);
     final schedule = ref.watch(scheduleProvider);
@@ -989,6 +984,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     List<ScheduleSlot> pending,
     List<Subject> subjects,
   ) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -1023,6 +1020,204 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
           ],
         ),
         const SizedBox(height: 12),
+        if (pending.length > 1) ...[
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+            decoration: BoxDecoration(
+              color: isDark ? const Color(0xFF1E2124) : const Color(0xFFF1F5F9),
+              borderRadius: BorderRadius.circular(14),
+              border: Border.all(
+                color: AppColors.primaryLight.withValues(alpha: 0.12),
+              ),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    const Icon(
+                      Icons.done_all_rounded,
+                      size: 15,
+                      color: AppColors.primaryLight,
+                    ),
+                    const SizedBox(width: 6),
+                    Text(
+                      'Mark all ${pending.length} pending classes:',
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                        color: isDark ? Colors.white70 : const Color(0xFF475569),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  children: [
+                    Expanded(
+                      child: CustomButton(
+                        color: isDark
+                            ? Colors.white.withValues(alpha: 0.08)
+                            : Colors.white,
+                        borderRadius: 10,
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 9,
+                          horizontal: 4,
+                        ),
+                        border: Border.all(
+                          color: isDark
+                              ? Colors.white.withValues(alpha: 0.12)
+                              : const Color(0xFFCBD5E1),
+                        ),
+                        onTap: () async {
+                          final slotIds = pending.map((s) => s.id).toList();
+                          await ref
+                              .read(responseProvider.notifier)
+                              .respondMultiple(
+                                slotIds: slotIds,
+                                lectureHappened: false,
+                                attended: false,
+                              );
+                          _toast(
+                            'All ${slotIds.length} classes recorded as Cancelled ❌',
+                            false,
+                          );
+                        },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.close,
+                              size: 15,
+                              color: isDark
+                                  ? Colors.white70
+                                  : AppColors.outlineLight,
+                            ),
+                            const SizedBox(width: 4),
+                            Flexible(
+                              child: Text(
+                                'Cancel All',
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w600,
+                                  color: isDark
+                                      ? Colors.white70
+                                      : AppColors.outlineLight,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: CustomButton(
+                        color: AppColors.redBg.withValues(alpha: 0.12),
+                        borderRadius: 10,
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 9,
+                          horizontal: 4,
+                        ),
+                        border: Border.all(
+                          color: AppColors.redBg.withValues(alpha: 0.25),
+                        ),
+                        onTap: () async {
+                          final slotIds = pending.map((s) => s.id).toList();
+                          await ref
+                              .read(responseProvider.notifier)
+                              .respondMultiple(
+                                slotIds: slotIds,
+                                lectureHappened: true,
+                                attended: false,
+                              );
+                          _toast(
+                            'All ${slotIds.length} classes recorded as Bunked! 😎',
+                            false,
+                          );
+                        },
+                        child: const Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.flight_takeoff,
+                              color: AppColors.redBg,
+                              size: 15,
+                            ),
+                            SizedBox(width: 4),
+                            Flexible(
+                              child: Text(
+                                'Bunk All',
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  color: AppColors.redBg,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: CustomButton(
+                        color: const Color(0xFF22C55E).withValues(alpha: 0.12),
+                        borderRadius: 10,
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 9,
+                          horizontal: 4,
+                        ),
+                        border: Border.all(
+                          color: const Color(0xFF22C55E).withValues(alpha: 0.25),
+                        ),
+                        onTap: () async {
+                          final slotIds = pending.map((s) => s.id).toList();
+                          await ref
+                              .read(responseProvider.notifier)
+                              .respondMultiple(
+                                slotIds: slotIds,
+                                lectureHappened: true,
+                                attended: true,
+                              );
+                          _toast(
+                            'All ${slotIds.length} classes recorded as Attended! 🎓',
+                            true,
+                          );
+                        },
+                        child: const Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.check_circle,
+                              color: Color(0xFF16A34A),
+                              size: 15,
+                            ),
+                            SizedBox(width: 4),
+                            Flexible(
+                              child: Text(
+                                'Attend All',
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  color: Color(0xFF16A34A),
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 12),
+        ],
         ...pending.map((slot) {
           final subject = subjects.firstWhere(
             (s) => s.id == slot.subjectId,
@@ -1033,12 +1228,11 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               createdAt: DateTime.now().toIso8601String(),
             ),
           );
-          final step = _promptSteps[slot.id] ?? 1;
 
           return Container(
             margin: const EdgeInsets.only(bottom: 12),
             decoration: BoxDecoration(
-              color: Theme.of(context).brightness == Brightness.dark
+              color: isDark
                   ? const Color(0xFF242729)
                   : const Color(0xFFFFFFFF),
               borderRadius: BorderRadius.circular(16),
@@ -1117,195 +1311,153 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   height: 1,
                   color: AppColors.outlineLight.withValues(alpha: 0.1),
                 ),
-                AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 250),
-                  child: step == 1
-                      ? _buildPromptStep1(slot.id)
-                      : _buildPromptStep2(slot.id),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12.0,
+                    vertical: 10.0,
+                  ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: CustomButton(
+                          color: isDark
+                              ? Colors.white.withValues(alpha: 0.06)
+                              : AppColors.bgSurfaceContainerLight,
+                          borderRadius: 10,
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 9,
+                            horizontal: 4,
+                          ),
+                          onTap: () async {
+                            await ref
+                                .read(responseProvider.notifier)
+                                .respond(
+                                  slotId: slot.id,
+                                  lectureHappened: false,
+                                  attended: false,
+                                );
+                          },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.close,
+                                size: 15,
+                                color: isDark
+                                    ? Colors.white70
+                                    : AppColors.outlineLight,
+                              ),
+                              const SizedBox(width: 4),
+                              Flexible(
+                                child: Text(
+                                  'Cancelled',
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w600,
+                                    color: isDark
+                                        ? Colors.white70
+                                        : AppColors.outlineLight,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: CustomButton(
+                          color: AppColors.redBg.withValues(alpha: 0.1),
+                          borderRadius: 10,
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 9,
+                            horizontal: 4,
+                          ),
+                          onTap: () async {
+                            await ref
+                                .read(responseProvider.notifier)
+                                .respond(
+                                  slotId: slot.id,
+                                  lectureHappened: true,
+                                  attended: false,
+                                );
+                          },
+                          child: const Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.flight_takeoff,
+                                color: AppColors.redBg,
+                                size: 15,
+                              ),
+                              SizedBox(width: 4),
+                              Flexible(
+                                child: Text(
+                                  'Bunked',
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    color: AppColors.redBg,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: CustomButton(
+                          color:
+                              const Color(0xFF22C55E).withValues(alpha: 0.1),
+                          borderRadius: 10,
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 9,
+                            horizontal: 4,
+                          ),
+                          onTap: () async {
+                            await ref
+                                .read(responseProvider.notifier)
+                                .respond(
+                                  slotId: slot.id,
+                                  lectureHappened: true,
+                                  attended: true,
+                                );
+                          },
+                          child: const Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.check_circle,
+                                color: Color(0xFF16A34A),
+                                size: 15,
+                              ),
+                              SizedBox(width: 4),
+                              Flexible(
+                                child: Text(
+                                  'Attended',
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    color: Color(0xFF16A34A),
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
           );
         }),
       ],
-    );
-  }
-
-  Widget _buildPromptStep1(String slotId) {
-    return Padding(
-      key: const ValueKey('step1'),
-      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
-      child: Column(
-        children: [
-          const Text(
-            'Did this lecture happen?',
-            style: TextStyle(color: AppColors.outlineLight, fontSize: 13),
-          ),
-          const SizedBox(height: 10),
-          Row(
-            children: [
-              Expanded(
-                child: CustomButton(
-                  color: Theme.of(context).brightness == Brightness.dark
-                      ? Colors.white.withValues(alpha: 0.05)
-                      : AppColors.bgSurfaceContainerLight,
-                  borderRadius: 10,
-                  padding: const EdgeInsets.symmetric(vertical: 10),
-                  onTap: () async {
-                    await ref
-                        .read(responseProvider.notifier)
-                        .respond(
-                          slotId: slotId,
-                          lectureHappened: false,
-                          attended: false,
-                        );
-                    _toast('Lecture recorded as Cancelled ❌', false);
-                  },
-                  child: const Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.close, size: 16),
-                      SizedBox(width: 6),
-                      Text(
-                        'Cancelled',
-                        style: TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              const SizedBox(width: 10),
-              Expanded(
-                child: CustomButton(
-                  color: AppColors.primaryLight.withValues(alpha: 0.1),
-                  borderRadius: 10,
-                  padding: const EdgeInsets.symmetric(vertical: 10),
-                  onTap: () {
-                    setState(() {
-                      _promptSteps[slotId] = 2;
-                    });
-                  },
-                  child: const Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.check,
-                        color: AppColors.primaryLight,
-                        size: 16,
-                      ),
-                      SizedBox(width: 6),
-                      Text(
-                        'Yes, it did',
-                        style: TextStyle(
-                          color: AppColors.primaryLight,
-                          fontSize: 13,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildPromptStep2(String slotId) {
-    return Padding(
-      key: const ValueKey('step2'),
-      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
-      child: Column(
-        children: [
-          const Text(
-            'Did you attend it?',
-            style: TextStyle(color: AppColors.outlineLight, fontSize: 13),
-          ),
-          const SizedBox(height: 10),
-          Row(
-            children: [
-              Expanded(
-                child: CustomButton(
-                  color: AppColors.redBg.withValues(alpha: 0.1),
-                  borderRadius: 10,
-                  padding: const EdgeInsets.symmetric(vertical: 10),
-                  onTap: () async {
-                    await ref
-                        .read(responseProvider.notifier)
-                        .respond(
-                          slotId: slotId,
-                          lectureHappened: true,
-                          attended: false,
-                        );
-                    _toast('Bunked! 😎 Stay above 75%!', false);
-                  },
-                  child: const Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.flight_takeoff,
-                        color: AppColors.redBg,
-                        size: 16,
-                      ),
-                      SizedBox(width: 6),
-                      Text(
-                        'Bunked 😎',
-                        style: TextStyle(
-                          color: AppColors.redBg,
-                          fontSize: 13,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              const SizedBox(width: 10),
-              Expanded(
-                child: CustomButton(
-                  color: const Color(0xFF22C55E).withValues(alpha: 0.1),
-                  borderRadius: 10,
-                  padding: const EdgeInsets.symmetric(vertical: 10),
-                  onTap: () async {
-                    await ref
-                        .read(responseProvider.notifier)
-                        .respond(
-                          slotId: slotId,
-                          lectureHappened: true,
-                          attended: true,
-                        );
-                    _toast('Attendance recorded! 🎓', true);
-                  },
-                  child: const Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.check_circle,
-                        color: Color(0xFF16A34A),
-                        size: 16,
-                      ),
-                      SizedBox(width: 6),
-                      Text(
-                        'Attended ✅',
-                        style: TextStyle(
-                          color: Color(0xFF16A34A),
-                          fontSize: 13,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
     );
   }
 

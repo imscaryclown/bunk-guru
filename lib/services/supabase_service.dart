@@ -51,7 +51,7 @@ class SupabaseService {
       email: email,
       password: password,
       data: {'full_name': name},
-      emailRedirectTo: 'com.mdalfaaz.bunkmitra://login',
+      emailRedirectTo: 'com.mdalfaaz.bunkguru://login',
     );
     final user = response.user;
     if (user != null && response.session == null) {
@@ -64,7 +64,7 @@ class SupabaseService {
   static Future<void> resetPassword(String email) async {
     await client.auth.resetPasswordForEmail(
       email,
-      redirectTo: 'com.mdalfaaz.bunkmitra://login',
+      redirectTo: 'com.mdalfaaz.bunkguru://login',
     );
   }
 

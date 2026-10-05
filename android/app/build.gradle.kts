@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.bunkmitra.bunk_mitra"
+    namespace = "com.bunkguru.bunk_guru"
     compileSdk = 36
     ndkVersion = flutter.ndkVersion
 
@@ -17,7 +17,7 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId = "com.bunkmitra.bunk_mitra"
+        applicationId = "com.bunkguru.bunk_guru"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = flutter.minSdkVersion

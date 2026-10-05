@@ -12,9 +12,9 @@ import '../../../services/supabase_service.dart';
 import '../../../models/subject.dart';
 import '../../../models/schedule_slot.dart';
 
-
 import '../../../widgets/page_header.dart';
 import '../../../widgets/header_icon_button.dart';
+import '../../../widgets/batch_import_success_dialog.dart';
 
 class ScheduleScreen extends ConsumerStatefulWidget {
   const ScheduleScreen({super.key});
@@ -214,7 +214,7 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
                         left: 20.0,
                         right: 20.0,
                         top: 16.0,
-                        bottom: 160.0 + MediaQuery.of(context).padding.bottom,
+                        bottom: 120.0 + MediaQuery.of(context).padding.bottom,
                       ),
                       itemCount: daySlots.length,
                       itemBuilder: (context, index) {
@@ -421,52 +421,16 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
         ),
       ),
       floatingActionButton: Padding(
-        padding: EdgeInsets.only(
-          bottom: 100.0 + MediaQuery.of(context).padding.bottom,
-        ),
-        child: Container(
-          height: 48,
-          margin: const EdgeInsets.symmetric(horizontal: 32.0),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(24.0),
-            color: const Color(0xFF4F46E5),
-            boxShadow: [
-              BoxShadow(
-                color: const Color(0xFF4F46E5).withValues(alpha: 0.35),
-                blurRadius: 14,
-                offset: const Offset(0, 4),
-              ),
-            ],
-          ),
-          child: Material(
-            color: Colors.transparent,
-            child: InkWell(
-              onTap: () => _showAddSlotSheet(),
-              borderRadius: BorderRadius.circular(24.0),
-              child: const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 24),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.add, color: Colors.white, size: 20),
-                    SizedBox(width: 8),
-                    Text(
-                      'ADD TIME SLOT',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 13,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
+        padding: const EdgeInsets.only(bottom: 93.0, right: 3.0),
+        child: FloatingActionButton(
+          shape: const CircleBorder(),
+          backgroundColor: const Color(0xFF4F46E5),
+          foregroundColor: Colors.white,
+          elevation: 4,
+          onPressed: () => _showAddSlotSheet(),
+          child: const Icon(Icons.add, size: 28),
         ),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 
@@ -528,25 +492,28 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
 
         return StatefulBuilder(
           builder: (context, setModalState) {
-            return Container(
+            return Padding(
               padding: EdgeInsets.only(
-                left: 20,
-                right: 20,
-                top: 12,
-                bottom: 24 + MediaQuery.of(context).viewInsets.bottom,
+                bottom: MediaQuery.of(context).viewInsets.bottom,
               ),
-              decoration: BoxDecoration(
-                color: isDark
-                    ? const Color(0xFF1D2022)
-                    : const Color(0xFFFFFFFF),
-                borderRadius: const BorderRadius.vertical(
-                  top: Radius.circular(24),
+              child: Container(
+                constraints: BoxConstraints(
+                  maxHeight: MediaQuery.of(context).size.height * 0.85,
                 ),
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
+                padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
+                decoration: BoxDecoration(
+                  color: isDark
+                      ? const Color(0xFF1D2022)
+                      : const Color(0xFFFFFFFF),
+                  borderRadius: const BorderRadius.vertical(
+                    top: Radius.circular(24),
+                  ),
+                ),
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
                   Center(
                     child: Container(
                       width: 40,
@@ -762,7 +729,6 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
                           );
                       if (mounted) {
                         Navigator.pop(context);
-                        _toast('Time slot added!', true);
                       }
                     },
                     child: const Text(
@@ -775,8 +741,10 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
                   ),
                 ],
               ),
-            );
-          },
+            ),
+          ),
+        );
+      },
         );
       },
     );
@@ -800,25 +768,28 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
 
         return StatefulBuilder(
           builder: (context, setModalState) {
-            return Container(
+            return Padding(
               padding: EdgeInsets.only(
-                left: 20,
-                right: 20,
-                top: 12,
-                bottom: 24 + MediaQuery.of(context).viewInsets.bottom,
+                bottom: MediaQuery.of(context).viewInsets.bottom,
               ),
-              decoration: BoxDecoration(
-                color: isDark
-                    ? const Color(0xFF1D2022)
-                    : const Color(0xFFFFFFFF),
-                borderRadius: const BorderRadius.vertical(
-                  top: Radius.circular(24),
+              child: Container(
+                constraints: BoxConstraints(
+                  maxHeight: MediaQuery.of(context).size.height * 0.85,
                 ),
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
+                padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
+                decoration: BoxDecoration(
+                  color: isDark
+                      ? const Color(0xFF1D2022)
+                      : const Color(0xFFFFFFFF),
+                  borderRadius: const BorderRadius.vertical(
+                    top: Radius.circular(24),
+                  ),
+                ),
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
                   Center(
                     child: Container(
                       width: 40,
@@ -1060,7 +1031,6 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
                                   .delete(slot.id);
                               if (mounted) {
                                 Navigator.pop(context);
-                                _toast('Time slot removed', false);
                               }
                             }
                           },
@@ -1092,7 +1062,6 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
                                 });
                             if (mounted) {
                               Navigator.pop(context);
-                              _toast('Schedule updated!', true);
                             }
                           },
                           child: const Text(
@@ -1109,8 +1078,10 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
                   ),
                 ],
               ),
-            );
-          },
+            ),
+          ),
+        );
+      },
         );
       },
     );
@@ -1130,25 +1101,28 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
 
         return StatefulBuilder(
           builder: (context, setModalState) {
-            return Container(
+            return Padding(
               padding: EdgeInsets.only(
-                left: 20,
-                right: 20,
-                top: 12,
-                bottom: 24 + MediaQuery.of(context).viewInsets.bottom,
+                bottom: MediaQuery.of(context).viewInsets.bottom,
               ),
-              decoration: BoxDecoration(
-                color: isDark
-                    ? const Color(0xFF1D2022)
-                    : const Color(0xFFFFFFFF),
-                borderRadius: const BorderRadius.vertical(
-                  top: Radius.circular(24),
+              child: Container(
+                constraints: BoxConstraints(
+                  maxHeight: MediaQuery.of(context).size.height * 0.85,
                 ),
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
+                padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
+                decoration: BoxDecoration(
+                  color: isDark
+                      ? const Color(0xFF1D2022)
+                      : const Color(0xFFFFFFFF),
+                  borderRadius: const BorderRadius.vertical(
+                    top: Radius.circular(24),
+                  ),
+                ),
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
                   Center(
                     child: Container(
                       width: 40,
@@ -1266,11 +1240,15 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
                                         .read(scheduleProvider.notifier)
                                         .refresh();
 
-                                    if (mounted) {
+                                    if (context.mounted) {
                                       Navigator.pop(context);
-                                      _toast(
-                                        'Imported classes successfully!',
-                                        true,
+                                      BatchImportSuccessDialog.show(
+                                        context: context,
+                                        title: 'Batch Joined Successfully!',
+                                        subtitle:
+                                            'Your course tracker and timetable are now synced with this batch.',
+                                        subjectCount: subjectsJson.length,
+                                        slotCount: scheduleJson.length,
                                       );
                                     }
                                   } catch (e) {
@@ -1413,8 +1391,10 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
                   ),
                 ],
               ),
-            );
-          },
+            ),
+          ),
+        );
+      },
         );
       },
     );

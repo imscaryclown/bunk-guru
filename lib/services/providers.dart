@@ -239,6 +239,22 @@ class ResponseNotifier extends StateNotifier<Map<String, Map<String, AttendanceR
     ref.read(subjectProvider.notifier).refresh(); // Sync subject stats
   }
 
+  Future<void> respondMultiple({
+    required List<String> slotIds,
+    required bool lectureHappened,
+    required bool attended,
+  }) async {
+    for (final slotId in slotIds) {
+      await SupabaseService.respondToSlot(
+        slotId: slotId,
+        lectureHappened: lectureHappened,
+        attended: attended,
+      );
+    }
+    refresh();
+    ref.read(subjectProvider.notifier).refresh(); // Sync subject stats
+  }
+
   Future<void> update({
     required String date,
     required String slotId,

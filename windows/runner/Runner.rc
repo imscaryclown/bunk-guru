@@ -89,13 +89,13 @@ BEGIN
     BEGIN
         BLOCK "040904e4"
         BEGIN
-            VALUE "CompanyName", "com.bunkmitra" "\0"
-            VALUE "FileDescription", "Bunk Mitra" "\0"
+            VALUE "CompanyName", "com.bunkguru" "\0"
+            VALUE "FileDescription", "Bunk Guru" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "Bunk Mitra" "\0"
-            VALUE "LegalCopyright", "Copyright (C) 2026 com.bunkmitra. All rights reserved." "\0"
+            VALUE "InternalName", "Bunk Guru" "\0"
+            VALUE "LegalCopyright", "Copyright (C) 2026 com.bunkguru. All rights reserved." "\0"
             VALUE "OriginalFilename", "bunk_mitra.exe" "\0"
-            VALUE "ProductName", "Bunk Mitra" "\0"
+            VALUE "ProductName", "Bunk Guru" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

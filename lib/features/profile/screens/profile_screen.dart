@@ -14,6 +14,7 @@ import '../../notifications/services/notification_service.dart';
 import '../../../widgets/custom_button.dart';
 import '../../../widgets/custom_text_field.dart';
 import '../../../widgets/page_header.dart';
+import '../../../widgets/batch_import_success_dialog.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../subjects/services/subject_parser.dart';
 
@@ -352,6 +353,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
         final isDark = Theme.of(context).brightness == Brightness.dark;
         bool isScanning = false;
         String? scanMessage;
+        bool isSubmitting = false;
 
         return StatefulBuilder(
           builder: (context, setModalState) {
@@ -724,43 +726,84 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                   // Commit Sync Button
                   CustomButton(
                     color: const Color(0xFF4F46E5),
-                    onTap: () async {
-                      try {
-                        // Map counts back
-                        final List<dynamic> updatedSubjects = syncList.map((s) {
-                          final String id = s['id'] as String;
-                          return {
-                            ...s,
-                            'attended_classes': theoryCounts[id] ?? 0,
-                            'practical_attended': practicalCounts[id] ?? 0,
-                          };
-                        }).toList();
+                    onTap: isSubmitting
+                        ? null
+                        : () async {
+                            setModalState(() {
+                              isSubmitting = true;
+                            });
 
-                        await SupabaseService.commitSharedData(
-                          updatedSubjects,
-                          scheduleJson,
-                        );
+                            try {
+                              // Map counts back
+                              final List<dynamic> updatedSubjects = syncList.map((s) {
+                                final String id = s['id'] as String;
+                                return {
+                                  ...s,
+                                  'attended_classes': theoryCounts[id] ?? 0,
+                                  'practical_attended': practicalCounts[id] ?? 0,
+                                };
+                              }).toList();
 
-                        ref.read(subjectProvider.notifier).refresh();
-                        ref.read(scheduleProvider.notifier).refresh();
+                              await SupabaseService.commitSharedData(
+                                updatedSubjects,
+                                scheduleJson,
+                              );
 
-                        if (context.mounted) {
-                          Navigator.of(context).pop(); // Close sync sheet
-                          ref.read(tabIndexProvider.notifier).state =
-                              0; // Go to Dashboard
-                          _toast('Batch joined successfully! 🎉', true);
-                        }
-                      } catch (e) {
-                        _toast('Failed to join batch: $e', false);
-                      }
-                    },
-                    child: const Text(
-                      'LOAD DATA AND FINISH',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
+                              ref.read(subjectProvider.notifier).refresh();
+                              ref.read(scheduleProvider.notifier).refresh();
+
+                              if (context.mounted) {
+                                Navigator.of(context).pop(); // Close sync sheet
+                                ref.read(tabIndexProvider.notifier).state =
+                                    0; // Go to Dashboard
+                                BatchImportSuccessDialog.show(
+                                  context: context,
+                                  title: 'Batch Joined Successfully!',
+                                  subtitle:
+                                      'Your course tracker and timetable are now synced with this batch.',
+                                  subjectCount: updatedSubjects.length,
+                                  slotCount: scheduleJson.length,
+                                );
+                              }
+                            } catch (e) {
+                              if (context.mounted) {
+                                setModalState(() {
+                                  isSubmitting = false;
+                                });
+                              }
+                              _toast('Failed to join batch: $e', false);
+                            }
+                          },
+                    child: isSubmitting
+                        ? const Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              SizedBox(
+                                height: 18,
+                                width: 18,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2.2,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              SizedBox(width: 10),
+                              Text(
+                                'LOADING DATA...',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 14,
+                                ),
+                              ),
+                            ],
+                          )
+                        : const Text(
+                            'LOAD DATA AND FINISH',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
                   ),
                 ],
               ),
@@ -1159,12 +1202,12 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
               ),
               const SizedBox(height: 8),
 
-              // About Bunk Mitra
+              // About Bunk Guru
               _buildSettingsTile(
                 context: context,
                 icon: Icons.info,
-                title: 'About Bunk Mitra',
-                subtitle: 'Meet the creators of Bunk Mitra',
+                title: 'About Bunk Guru',
+                subtitle: 'Meet the creators of Bunk Guru',
                 iconColor: Colors.teal,
                 onTap: () {
                   HapticFeedback.lightImpact();

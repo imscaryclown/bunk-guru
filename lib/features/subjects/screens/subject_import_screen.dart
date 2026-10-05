@@ -104,6 +104,9 @@ class _SubjectImportScreenState extends State<SubjectImportScreen> {
             bottom: MediaQuery.of(context).viewInsets.bottom,
           ),
           child: Container(
+            constraints: BoxConstraints(
+              maxHeight: MediaQuery.of(context).size.height * 0.85,
+            ),
             padding: const EdgeInsets.all(24),
             decoration: BoxDecoration(
               color: isDark ? const Color(0xFF1D2022) : Colors.white,
@@ -111,67 +114,69 @@ class _SubjectImportScreenState extends State<SubjectImportScreen> {
                 top: Radius.circular(24),
               ),
             ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                const Text(
-                  'Paste Attendance Text',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-                ),
-                const SizedBox(height: 16),
-                TextField(
-                  controller: controller,
-                  maxLines: 8,
-                  decoration: InputDecoration(
-                    hintText:
-                        'Data Structures 40 35\nOperating Systems 30 25\n...',
-                    filled: true,
-                    fillColor: isDark
-                        ? const Color(0xFF242729)
-                        : Colors.grey.withValues(alpha: 0.1),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide.none,
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  const Text(
+                    'Paste Attendance Text',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                  ),
+                  const SizedBox(height: 16),
+                  TextField(
+                    controller: controller,
+                    maxLines: 8,
+                    decoration: InputDecoration(
+                      hintText:
+                          'Data Structures 40 35\nOperating Systems 30 25\n...',
+                      filled: true,
+                      fillColor: isDark
+                          ? const Color(0xFF242729)
+                          : Colors.grey.withValues(alpha: 0.1),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide.none,
+                      ),
                     ),
                   ),
-                ),
-                const SizedBox(height: 16),
-                ElevatedButton(
-                  onPressed: () async {
-                    final text = controller.text.trim();
-                    if (text.isEmpty) return;
-                    Navigator.pop(context);
+                  const SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: () async {
+                      final text = controller.text.trim();
+                      if (text.isEmpty) return;
+                      Navigator.pop(context);
 
-                    _setProcessing(true, 'AI is extracting subjects...');
-                    try {
-                      final subjects = await SubjectParser.parseText(text);
-                      if (mounted) {
-                        await _processParsedSubjects(subjects);
+                      _setProcessing(true, 'AI is extracting subjects...');
+                      try {
+                        final subjects = await SubjectParser.parseText(text);
+                        if (mounted) {
+                          await _processParsedSubjects(subjects);
+                        }
+                      } catch (e) {
+                        if (mounted) {
+                          _setProcessing(false);
+                          _toast('Failed to extract: $e', isError: true);
+                        }
                       }
-                    } catch (e) {
-                      if (mounted) {
-                        _setProcessing(false);
-                        _toast('Failed to extract: $e', isError: true);
-                      }
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF4F46E5),
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF4F46E5),
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    child: const Text(
+                      'Extract Text',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
-                  child: const Text(
-                    'Extract Text',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         );
@@ -185,17 +190,12 @@ class _SubjectImportScreenState extends State<SubjectImportScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: ShaderMask(
-          shaderCallback: (bounds) => const LinearGradient(
-            colors: [Color(0xFF4F46E5), Color(0xFFB4136D)],
-          ).createShader(bounds),
-          child: const Text(
-            'Import Subjects',
-            style: TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.w500,
-              fontFamily: 'Inter',
-            ),
+        title: Text(
+          'Import Subjects',
+          style: TextStyle(
+            color: isDark ? AppColors.textMainDark : AppColors.textMainLight,
+            fontWeight: FontWeight.w500,
+            fontFamily: 'Inter',
           ),
         ),
       ),

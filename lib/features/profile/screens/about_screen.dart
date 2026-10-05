@@ -49,7 +49,7 @@ class AboutScreen extends StatelessWidget {
           onPressed: () => context.pop(),
         ),
         title: Text(
-          'About Bunk Mitra',
+          'About Bunk Guru',
           style: GoogleFonts.inter(fontWeight: FontWeight.w600, fontSize: 20),
         ),
         elevation: 0,
@@ -114,7 +114,7 @@ class AboutScreen extends StatelessWidget {
                       colors: [Color(0xFF4F46E5), Color(0xFF9333EA)],
                     ).createShader(bounds),
                     child: Text(
-                      'Bunk Mitra',
+                      'Bunk Guru',
                       style: GoogleFonts.inter(
                         fontSize: 28,
                         fontWeight: FontWeight.w600,
@@ -327,7 +327,7 @@ class AboutScreen extends StatelessWidget {
             const Align(
               alignment: Alignment.centerLeft,
               child: Text(
-                'THE BUNK MITRA TEAM',
+                'THE BUNK GURU TEAM',
                 style: TextStyle(
                   fontSize: 11,
                   fontWeight: FontWeight.w500,
@@ -346,7 +346,7 @@ class AboutScreen extends StatelessWidget {
               role: 'Lead Developer',
               details: 'Galgotias University · 1st Year',
               description:
-                  'Hey! 👋 Just a developer trying to solve the age-old student dilemma: "Can I skip this lecture?" Bunk Mitra is my solution to help you stay on track without losing your freedom.',
+                  'Hey! 👋 Just a developer trying to solve the age-old student dilemma: "Can I skip this lecture?" Bunk Guru is my solution to help you stay on track without losing your freedom.',
               instagram: 'https://instagram.com/mdalfaaz',
               github: 'https://github.com/imscaryclown',
               linkedin: 'https://www.linkedin.com/in/md-alfaaz-4b13b314b',
@@ -384,7 +384,7 @@ class AboutScreen extends StatelessWidget {
 
             // FOOTER SECTION
             Text(
-              'Bunk Mitra v1.0.0',
+              'Bunk Guru v1.0.0',
               style: TextStyle(
                 fontSize: 11,
                 color: isDark ? Colors.white30 : Colors.black38,
