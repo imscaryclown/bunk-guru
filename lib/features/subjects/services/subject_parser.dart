@@ -146,16 +146,15 @@ class SubjectParser {
     
     return subjects;
   }
-  static Future<List<ParsedSubject>> parseMappedImages(List<Uint8List> imagesBytes, List<String> expectedSubjects) async {
+  static Future<List<ParsedSubject>?> parseMappedImages(List<Uint8List> imagesBytes, List<String> expectedSubjects) async {
     final geminiResult = await GeminiService.parseAttendanceForSubjects(imagesBytes, expectedSubjects);
     
-    if (geminiResult != null && geminiResult.isNotEmpty) {
-      try {
-        return geminiResult.map((json) => ParsedSubject.fromJson(json)).toList();
-      } catch (e) {
-        debugPrint('Error mapping Gemini result to ParsedSubject: $e');
-      }
+    if (geminiResult == null) return null;
+    try {
+      return geminiResult.map((json) => ParsedSubject.fromJson(json)).toList();
+    } catch (e) {
+      debugPrint('Error mapping Gemini result to ParsedSubject: $e');
+      return null;
     }
-    return [];
   }
 }

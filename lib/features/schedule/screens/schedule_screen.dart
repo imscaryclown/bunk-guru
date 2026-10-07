@@ -49,13 +49,6 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
     AppColors.secondaryLight,
     const Color(0xFF006A7C),
   ];
-  final List<IconData> _slotIcons = [
-    Icons.calculate,
-    Icons.science,
-    Icons.computer,
-    Icons.account_tree,
-    Icons.code,
-  ];
 
   void _toast(String msg, bool isSuccess) {
     ScaffoldMessenger.of(context).showSnackBar(
@@ -233,185 +226,235 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
                         final icon = _getIconData(sub.icon);
 
                         return Padding(
-                          padding: const EdgeInsets.only(bottom: 16.0),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              // Left time labels
-                              Container(
-                                width: 75,
-                                padding: const EdgeInsets.only(top: 4),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: [
-                                    Text(
-                                      TimeFormatter.formatTime(slot.time),
-                                      style: theme.textTheme.labelLarge
-                                          ?.copyWith(fontSize: 11),
-                                    ),
-                                    if (slot.endTime.isNotEmpty) ...[
-                                      const SizedBox(height: 2),
-                                      Text(
-                                        'to ${TimeFormatter.formatTime(slot.endTime)}',
-                                        style: TextStyle(
-                                          color: isDark
-                                              ? AppColors.outlineDark
-                                              : AppColors.outlineLight,
-                                          fontSize: 9,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ],
-                                  ],
+                          padding: const EdgeInsets.only(bottom: 14.0),
+                          child: GestureDetector(
+                            onTap: () => _showEditSlotSheet(slot),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: isDark
+                                    ? const Color(0xFF242729)
+                                    : const Color(0xFFFFFFFF),
+                                borderRadius: BorderRadius.circular(16.0),
+                                border: Border.all(
+                                  color: isDark
+                                      ? Colors.white.withValues(
+                                          alpha: 0.05,
+                                        )
+                                      : AppColors.outlineVariantLight
+                                            .withValues(alpha: 0.3),
+                                  width: 1,
                                 ),
-                              ),
-                              const SizedBox(width: 12),
-
-                              // Right Card details
-                              Expanded(
-                                child: GestureDetector(
-                                  onTap: () => _showEditSlotSheet(slot),
-                                  child: Container(
-                                    padding: const EdgeInsets.all(12),
-                                    decoration: BoxDecoration(
-                                      color: isDark
-                                          ? const Color(0xFF242729)
-                                          : const Color(0xFFFFFFFF),
-                                      borderRadius: BorderRadius.circular(16.0),
-                                      border: Border.all(
-                                        color: isDark
-                                            ? Colors.white.withValues(
-                                                alpha: 0.05,
-                                              )
-                                            : AppColors.outlineVariantLight
-                                                  .withValues(alpha: 0.3),
-                                        width: 1,
-                                      ),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: color.withValues(alpha: 0.04),
-                                          blurRadius: 10,
-                                          offset: const Offset(0, 4),
-                                        ),
-                                      ],
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: color.withValues(
+                                      alpha: isDark ? 0.08 : 0.04,
                                     ),
-                                    clipBehavior: Clip.antiAlias,
-                                    child: Stack(
+                                    blurRadius: 10,
+                                    offset: const Offset(0, 4),
+                                  ),
+                                ],
+                              ),
+                              clipBehavior: Clip.antiAlias,
+                              child: Stack(
+                                children: [
+                                  // Left accent bar
+                                  Positioned(
+                                    left: 0,
+                                    top: 0,
+                                    bottom: 0,
+                                    child: Container(
+                                      width: 4,
+                                      color: color,
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.fromLTRB(
+                                      16.0,
+                                      14.0,
+                                      14.0,
+                                      14.0,
+                                    ),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
-                                        // Left accent bar
-                                        Positioned(
-                                          left: 0,
-                                          top: 0,
-                                          bottom: 0,
-                                          child: Container(
-                                            width: 3,
-                                            color: color,
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.only(
-                                            left: 10.0,
-                                          ),
-                                          child: Row(
-                                            children: [
-                                              Container(
-                                                width: 38,
-                                                height: 38,
-                                                decoration: BoxDecoration(
-                                                  color: color.withValues(
-                                                    alpha: 0.1,
-                                                  ),
-                                                  borderRadius:
-                                                      BorderRadius.circular(10),
+                                        // Top Row: Time Range & Slot Type Badge
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Row(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Icon(
+                                                  Icons.access_time_rounded,
+                                                  size: 13,
+                                                  color: isDark
+                                                      ? AppColors.outlineDark
+                                                      : AppColors.outlineLight,
                                                 ),
-                                                child: Icon(
-                                                  icon,
-                                                  color: color,
-                                                  size: 18,
+                                                const SizedBox(width: 4),
+                                                Text(
+                                                  slot.endTime.isNotEmpty
+                                                      ? '${TimeFormatter.formatTime(slot.time)} - ${TimeFormatter.formatTime(slot.endTime)}'
+                                                      : TimeFormatter.formatTime(
+                                                          slot.time,
+                                                        ),
+                                                  style: TextStyle(
+                                                    fontSize: 12,
+                                                    fontWeight: FontWeight.w600,
+                                                    color: isDark
+                                                        ? AppColors.textMainDark
+                                                              .withValues(
+                                                                alpha: 0.75,
+                                                              )
+                                                        : AppColors
+                                                              .textMainLight
+                                                              .withValues(
+                                                                alpha: 0.75,
+                                                              ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            Container(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                    horizontal: 8,
+                                                    vertical: 3,
+                                                  ),
+                                              decoration: BoxDecoration(
+                                                color: slot.slotType ==
+                                                        'practical'
+                                                    ? AppColors.secondaryLight
+                                                          .withValues(
+                                                            alpha: 0.12,
+                                                          )
+                                                    : AppColors.primaryLight
+                                                          .withValues(
+                                                            alpha: 0.12,
+                                                          ),
+                                                borderRadius:
+                                                    BorderRadius.circular(6),
+                                              ),
+                                              child: Text(
+                                                slot.slotType == 'practical'
+                                                    ? 'Practical'
+                                                    : 'Theory',
+                                                style: TextStyle(
+                                                  color: slot.slotType ==
+                                                          'practical'
+                                                      ? AppColors.secondaryLight
+                                                      : AppColors.primaryLight,
+                                                  fontSize: 10,
+                                                  fontWeight: FontWeight.w700,
+                                                  letterSpacing: 0.3,
                                                 ),
                                               ),
-                                              const SizedBox(width: 12),
+                                            ),
+                                          ],
+                                        ),
+                                        const SizedBox(height: 10),
+
+                                        // Main Row: Subject Icon + Title (multi-line)
+                                        Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            Container(
+                                              width: 40,
+                                              height: 40,
+                                              decoration: BoxDecoration(
+                                                color: color.withValues(
+                                                  alpha: 0.1,
+                                                ),
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                              ),
+                                              child: Icon(
+                                                icon,
+                                                color: color,
+                                                size: 20,
+                                              ),
+                                            ),
+                                            const SizedBox(width: 12),
+                                            Expanded(
+                                              child: Text(
+                                                sub.name,
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.w600,
+                                                  fontSize: 15,
+                                                  height: 1.25,
+                                                  color: isDark
+                                                      ? AppColors.textMainDark
+                                                      : AppColors.textMainLight,
+                                                ),
+                                                maxLines: 2,
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+
+                                        // Bottom Row: Room & Optional Professor
+                                        const SizedBox(height: 10),
+                                        Row(
+                                          children: [
+                                            const Icon(
+                                              Icons.location_on_outlined,
+                                              size: 13,
+                                              color: AppColors.outlineLight,
+                                            ),
+                                            const SizedBox(width: 3),
+                                            Text(
+                                              slot.room.isNotEmpty
+                                                  ? slot.room
+                                                  : 'TBD',
+                                              style: const TextStyle(
+                                                color: AppColors.outlineLight,
+                                                fontSize: 11,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                            if (sub.professor.isNotEmpty) ...[
+                                              const SizedBox(width: 8),
+                                              const Text(
+                                                '•',
+                                                style: TextStyle(
+                                                  color: AppColors.outlineLight,
+                                                  fontSize: 11,
+                                                ),
+                                              ),
+                                              const SizedBox(width: 8),
+                                              const Icon(
+                                                Icons.person_outline_rounded,
+                                                size: 13,
+                                                color: AppColors.outlineLight,
+                                              ),
+                                              const SizedBox(width: 3),
                                               Expanded(
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text(
-                                                      sub.name,
-                                                      style: const TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.w600,
-                                                        fontSize: 14,
-                                                      ),
-                                                      maxLines: 1,
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                    ),
-                                                    const SizedBox(height: 4),
-                                                    Row(
-                                                      children: [
-                                                        const Icon(
-                                                          Icons.location_on,
-                                                          size: 12,
-                                                          color: AppColors
-                                                              .outlineLight,
-                                                        ),
-                                                        const SizedBox(
-                                                          width: 2,
-                                                        ),
-                                                        Text(
-                                                          slot.room.isNotEmpty
-                                                              ? slot.room
-                                                              : 'TBD',
-                                                          style: const TextStyle(
-                                                            color: AppColors
-                                                                .outlineLight,
-                                                            fontSize: 10,
-                                                            fontWeight:
-                                                                FontWeight.w600,
-                                                          ),
-                                                        ),
-                                                        const SizedBox(
-                                                          width: 6,
-                                                        ),
-                                                        const Text(
-                                                          '•',
-                                                          style: TextStyle(
-                                                            color: AppColors
-                                                                .outlineLight,
-                                                            fontSize: 10,
-                                                          ),
-                                                        ),
-                                                        const SizedBox(
-                                                          width: 6,
-                                                        ),
-                                                        Text(
-                                                          slot.slotType ==
-                                                                  'practical'
-                                                              ? 'Practical'
-                                                              : 'Theory',
-                                                          style: const TextStyle(
-                                                            color: AppColors
-                                                                .primaryLight,
-                                                            fontSize: 10,
-                                                            fontWeight:
-                                                                FontWeight.w600,
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ],
+                                                child: Text(
+                                                  sub.professor,
+                                                  style: const TextStyle(
+                                                    color:
+                                                        AppColors.outlineLight,
+                                                    fontSize: 11,
+                                                    fontWeight: FontWeight.w500,
+                                                  ),
+                                                  maxLines: 1,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
                                                 ),
                                               ),
                                             ],
-                                          ),
+                                          ],
                                         ),
                                       ],
                                     ),
                                   ),
-                                ),
+                                ],
                               ),
-                            ],
+                            ),
                           ),
                         );
                       },
@@ -559,7 +602,10 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
                         items: subjects.map((s) {
                           return DropdownMenuItem(
                             value: s.id,
-                            child: Text(s.name),
+                            child: Text(
+                              s.name,
+                              overflow: TextOverflow.ellipsis,
+                            ),
                           );
                         }).toList(),
                         onChanged: (val) {
@@ -835,7 +881,10 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
                         items: subjects.map((s) {
                           return DropdownMenuItem(
                             value: s.id,
-                            child: Text(s.name),
+                            child: Text(
+                              s.name,
+                              overflow: TextOverflow.ellipsis,
+                            ),
                           );
                         }).toList(),
                         onChanged: (val) {

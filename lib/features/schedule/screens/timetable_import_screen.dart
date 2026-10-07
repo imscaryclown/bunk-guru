@@ -48,7 +48,11 @@ class _TimetableImportScreenState extends State<TimetableImportScreen> {
   // 1. Photo Import
   Future<void> _importFromPhoto() async {
     final picker = ImagePicker();
-    final pickedFiles = await picker.pickMultiImage();
+    final pickedFiles = await picker.pickMultiImage(
+      maxWidth: 1600,
+      maxHeight: 1600,
+      imageQuality: 85,
+    );
     if (pickedFiles.isEmpty) return;
 
     _setProcessing(true, 'AI is scanning images...');

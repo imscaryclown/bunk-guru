@@ -403,7 +403,11 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                         ? null
                         : () async {
                             final picker = ImagePicker();
-                            final pickedFiles = await picker.pickMultiImage();
+                            final pickedFiles = await picker.pickMultiImage(
+                              maxWidth: 1600,
+                              maxHeight: 1600,
+                              imageQuality: 85,
+                            );
                             if (pickedFiles.isEmpty) return;
 
                             setModalState(() {
@@ -426,32 +430,67 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                     expectedSubjects,
                                   );
 
-                              if (parsed.isNotEmpty) {
+                              if (!context.mounted) return;
+
+                              Map<String, dynamic> matchSubject(String parsedName) {
+                                final cleanParsed = parsedName.toLowerCase().trim();
+                                if (cleanParsed.isEmpty) return {};
+                                // 1. Exact match
+                                for (final s in syncList) {
+                                  final name = (s['name'] as String).toLowerCase().trim();
+                                  if (name == cleanParsed) return s;
+                                }
+                                // 2. Substring / contains match
+                                for (final s in syncList) {
+                                  final name = (s['name'] as String).toLowerCase().trim();
+                                  if (name.contains(cleanParsed) || cleanParsed.contains(name)) return s;
+                                }
+                                // 3. Acronym match (e.g., EDP -> Engineering Design and Prototyping)
+                                for (final s in syncList) {
+                                  final name = (s['name'] as String).toLowerCase().trim();
+                                  final words = name.split(RegExp(r'[^a-zA-Z0-9]+')).where((w) => w.isNotEmpty);
+                                  final initials = words.map((w) => w[0]).join();
+                                  if (initials == cleanParsed || cleanParsed == initials) return s;
+                                }
+                                return {};
+                              }
+
+                              if (parsed == null) {
+                                setModalState(() {
+                                  isScanning = false;
+                                  scanMessage =
+                                      '⚠️ AI service was temporarily busy or timed out. Please tap scan again.';
+                                });
+                              } else if (parsed.isNotEmpty) {
+                                int autoFilledCount = 0;
                                 setModalState(() {
                                   for (var p in parsed) {
-                                    final match = syncList.firstWhere(
-                                      (s) =>
-                                          (s['name'] as String).toLowerCase() ==
-                                          p.subjectName.toLowerCase(),
-                                      orElse: () => {},
-                                    );
+                                    final match = matchSubject(p.subjectName);
                                     if (match.isNotEmpty) {
                                       final id = match['id'] as String;
                                       theoryCounts[id] = p.attendedClasses;
                                       practicalCounts[id] = p.practicalAttended;
+                                      autoFilledCount++;
                                     }
                                   }
                                   isScanning = false;
-                                  scanMessage =
-                                      '✅ Attendance auto-filled successfully!';
+                                  if (autoFilledCount > 0) {
+                                    scanMessage =
+                                        '✅ Auto-filled $autoFilledCount subjects!';
+                                  } else {
+                                    scanMessage =
+                                        '⚠️ Detected ${parsed.length} subjects, but none matched your course names.';
+                                  }
                                 });
                               } else {
                                 setModalState(() {
                                   isScanning = false;
-                                  scanMessage = '❌ No attendance data found.';
+                                  scanMessage =
+                                      '❌ No attendance records found in screenshot. Ensure the table is clearly visible.';
                                 });
                               }
                             } catch (e) {
+                              if (!context.mounted) return;
                               setModalState(() {
                                 isScanning = false;
                                 scanMessage = '❌ Error scanning images.';
