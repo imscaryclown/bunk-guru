@@ -1,3 +1,5 @@
+import 'dart:async';
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -110,6 +112,10 @@ class SubjectNotifier extends StateNotifier<List<Subject>> {
     state = LocalStorageService.getSubjects();
   }
 
+  void setLocalState(List<Subject> subjects) {
+    state = subjects;
+  }
+
   void clear() {
     state = [];
   }
@@ -126,7 +132,10 @@ class SubjectNotifier extends StateNotifier<List<Subject>> {
     String icon = 'school',
     String color = 'primary',
   }) async {
-    await SupabaseService.addSubject(
+    final String tempId = 'local_${Random().nextInt(100000)}';
+    final tempSubject = Subject(
+      id: tempId,
+      userId: SupabaseService.currentUser?.id ?? 'demo',
       name: name,
       professor: professor,
       totalClasses: totalClasses,
@@ -137,19 +146,72 @@ class SubjectNotifier extends StateNotifier<List<Subject>> {
       practicalAttended: practicalAttended,
       icon: icon,
       color: color,
+      createdAt: DateTime.now().toIso8601String(),
+      isPending: true,
     );
-    refresh();
+
+    // 1. Instant optimistic UI update (0ms)
+    state = [...state, tempSubject];
+
+    // 2. Background sync
+    try {
+      final synced = await SupabaseService.addSubject(
+        name: name,
+        professor: professor,
+        totalClasses: totalClasses,
+        attendedClasses: attendedClasses,
+        hasPractical: hasPractical,
+        isPracticalOnly: isPracticalOnly,
+        practicalTotal: practicalTotal,
+        practicalAttended: practicalAttended,
+        icon: icon,
+        color: color,
+      );
+      state = state.map((s) => s.id == tempId ? synced : s).toList();
+    } catch (_) {
+      refresh();
+      rethrow;
+    }
   }
 
   Future<void> update(String id, Map<String, dynamic> updates) async {
-    await SupabaseService.updateSubject(id, updates);
-    refresh();
+    // 1. Instant optimistic UI update (0ms)
+    final idx = state.indexWhere((s) => s.id == id);
+    if (idx != -1) {
+      final updated = state[idx].copyWith(
+        name: updates['name'],
+        professor: updates['professor'],
+        totalClasses: updates['total_classes'],
+        attendedClasses: updates['attended_classes'],
+        hasPractical: updates['has_practical'],
+        isPracticalOnly: updates['is_practical_only'],
+        practicalTotal: updates['practical_total'],
+        practicalAttended: updates['practical_attended'],
+        icon: updates['icon'],
+        color: updates['color'],
+      );
+      final newList = List<Subject>.from(state);
+      newList[idx] = updated;
+      state = newList;
+    }
+
+    // 2. Background sync
+    unawaited(SupabaseService.updateSubject(id, updates).catchError((_) {
+      refresh();
+      return null;
+    }));
   }
 
   Future<void> delete(String id) async {
-    await SupabaseService.deleteSubject(id);
-    refresh();
-    ref.read(scheduleProvider.notifier).refresh();
+    // 1. Instant optimistic UI removal (0ms)
+    state = state.where((s) => s.id != id).toList();
+    ref.read(scheduleProvider.notifier).removeBySubjectId(id);
+
+    // 2. Background sync
+    unawaited(SupabaseService.deleteSubject(id).catchError((_) {
+      refresh();
+      ref.read(scheduleProvider.notifier).refresh();
+    }));
   }
 }
 
@@ -164,6 +226,13 @@ class ScheduleNotifier extends StateNotifier<List<ScheduleSlot>> {
 
   void refresh() {
     state = LocalStorageService.getScheduleSlots();
+    if (LocalStorageService.isNotificationEnabled) {
+      NotificationService.scheduleAll();
+    }
+  }
+
+  void removeBySubjectId(String subjectId) {
+    state = state.where((s) => s.subjectId != subjectId).toList();
     if (LocalStorageService.isNotificationEnabled) {
       NotificationService.scheduleAll();
     }
@@ -184,25 +253,81 @@ class ScheduleNotifier extends StateNotifier<List<ScheduleSlot>> {
     String slotType = 'theory',
     String room = '',
   }) async {
-    await SupabaseService.addScheduleSlot(
+    final String tempId = 'local_${Random().nextInt(100000)}';
+    final tempSlot = ScheduleSlot(
+      id: tempId,
+      userId: SupabaseService.currentUser?.id ?? 'demo',
       subjectId: subjectId,
       dayOfWeek: dayOfWeek,
       time: time,
       endTime: endTime,
       slotType: slotType,
       room: room,
+      createdAt: DateTime.now().toIso8601String(),
+      isPending: true,
     );
-    refresh();
+
+    // 1. Instant optimistic UI update (0ms)
+    state = [...state, tempSlot];
+    if (LocalStorageService.isNotificationEnabled) {
+      NotificationService.scheduleAll();
+    }
+
+    // 2. Background sync
+    try {
+      final synced = await SupabaseService.addScheduleSlot(
+        subjectId: subjectId,
+        dayOfWeek: dayOfWeek,
+        time: time,
+        endTime: endTime,
+        slotType: slotType,
+        room: room,
+      );
+      state = state.map((s) => s.id == tempId ? synced : s).toList();
+    } catch (_) {
+      refresh();
+      rethrow;
+    }
   }
 
   Future<void> update(String id, Map<String, dynamic> updates) async {
-    await SupabaseService.updateScheduleSlot(id, updates);
-    refresh();
+    // 1. Instant optimistic UI update (0ms)
+    final idx = state.indexWhere((s) => s.id == id);
+    if (idx != -1) {
+      final updated = state[idx].copyWith(
+        subjectId: updates['subject_id'],
+        dayOfWeek: updates['day_of_week'],
+        time: updates['time'],
+        endTime: updates['end_time'],
+        slotType: updates['slot_type'],
+        room: updates['room'],
+      );
+      final newList = List<ScheduleSlot>.from(state);
+      newList[idx] = updated;
+      state = newList;
+      if (LocalStorageService.isNotificationEnabled) {
+        NotificationService.scheduleAll();
+      }
+    }
+
+    // 2. Background sync
+    unawaited(SupabaseService.updateScheduleSlot(id, updates).catchError((_) {
+      refresh();
+      return null;
+    }));
   }
 
   Future<void> delete(String id) async {
-    await SupabaseService.deleteScheduleSlot(id);
-    refresh();
+    // 1. Instant optimistic UI removal (0ms)
+    state = state.where((s) => s.id != id).toList();
+    if (LocalStorageService.isNotificationEnabled) {
+      NotificationService.scheduleAll();
+    }
+
+    // 2. Background sync
+    unawaited(SupabaseService.deleteScheduleSlot(id).catchError((_) {
+      refresh();
+    }));
   }
 }
 
@@ -230,13 +355,64 @@ class ResponseNotifier extends StateNotifier<Map<String, Map<String, AttendanceR
     required bool lectureHappened,
     required bool attended,
   }) async {
-    await SupabaseService.respondToSlot(
+    // 1. Optimistic response update in memory (0ms)
+    final todayKey = SupabaseService.todayKey();
+    final updatedResponses = Map<String, Map<String, AttendanceResponse>>.from(state);
+    if (!updatedResponses.containsKey(todayKey)) {
+      updatedResponses[todayKey] = {};
+    } else {
+      updatedResponses[todayKey] = Map<String, AttendanceResponse>.from(updatedResponses[todayKey]!);
+    }
+
+    final newResp = AttendanceResponse(
+      id: 'local_${Random().nextInt(100000)}',
+      userId: SupabaseService.currentUser?.id ?? 'demo',
+      slotId: slotId,
+      date: todayKey,
+      lectureHappened: lectureHappened,
+      attended: attended,
+      createdAt: DateTime.now().toIso8601String(),
+    );
+    updatedResponses[todayKey]![slotId] = newResp;
+    state = updatedResponses;
+
+    // 2. Optimistic subject counter update in memory (0ms)
+    if (lectureHappened) {
+      final allSlots = ref.read(scheduleProvider);
+      final slotIdx = allSlots.indexWhere((s) => s.id == slotId);
+      if (slotIdx != -1) {
+        final slot = allSlots[slotIdx];
+        final subjects = ref.read(subjectProvider);
+        final sIdx = subjects.indexWhere((s) => s.id == slot.subjectId);
+        if (sIdx != -1) {
+          final sub = subjects[sIdx];
+          final bool isPractical = slot.slotType == 'practical' || sub.isPracticalOnly;
+          final updatedSub = isPractical
+              ? sub.copyWith(
+                  hasPractical: true,
+                  practicalTotal: sub.practicalTotal + 1,
+                  practicalAttended: sub.practicalAttended + (attended ? 1 : 0),
+                )
+              : sub.copyWith(
+                  totalClasses: sub.totalClasses + 1,
+                  attendedClasses: sub.attendedClasses + (attended ? 1 : 0),
+                );
+          final updatedSubs = List<Subject>.from(subjects);
+          updatedSubs[sIdx] = updatedSub;
+          ref.read(subjectProvider.notifier).setLocalState(updatedSubs);
+        }
+      }
+    }
+
+    // 3. Background sync to local storage & Supabase
+    unawaited(SupabaseService.respondToSlot(
       slotId: slotId,
       lectureHappened: lectureHappened,
       attended: attended,
-    );
-    refresh();
-    ref.read(subjectProvider.notifier).refresh(); // Sync subject stats
+    ).catchError((_) {
+      refresh();
+      ref.read(subjectProvider.notifier).refresh();
+    }));
   }
 
   Future<void> respondMultiple({
@@ -244,15 +420,68 @@ class ResponseNotifier extends StateNotifier<Map<String, Map<String, AttendanceR
     required bool lectureHappened,
     required bool attended,
   }) async {
+    if (slotIds.isEmpty) return;
+
+    // 1. Optimistic response update in memory (0ms)
+    final todayKey = SupabaseService.todayKey();
+    final updatedResponses = Map<String, Map<String, AttendanceResponse>>.from(state);
+    if (!updatedResponses.containsKey(todayKey)) {
+      updatedResponses[todayKey] = {};
+    } else {
+      updatedResponses[todayKey] = Map<String, AttendanceResponse>.from(updatedResponses[todayKey]!);
+    }
+
     for (final slotId in slotIds) {
-      await SupabaseService.respondToSlot(
+      updatedResponses[todayKey]![slotId] = AttendanceResponse(
+        id: 'local_${Random().nextInt(100000)}',
+        userId: SupabaseService.currentUser?.id ?? 'demo',
         slotId: slotId,
+        date: todayKey,
         lectureHappened: lectureHappened,
         attended: attended,
+        createdAt: DateTime.now().toIso8601String(),
       );
     }
-    refresh();
-    ref.read(subjectProvider.notifier).refresh(); // Sync subject stats
+    state = updatedResponses;
+
+    // 2. Optimistic subject counters update for all affected slots (0ms)
+    if (lectureHappened) {
+      final allSlots = ref.read(scheduleProvider);
+      final subjects = List<Subject>.from(ref.read(subjectProvider));
+
+      for (final slotId in slotIds) {
+        final slotIdx = allSlots.indexWhere((s) => s.id == slotId);
+        if (slotIdx == -1) continue;
+        final slot = allSlots[slotIdx];
+
+        final sIdx = subjects.indexWhere((s) => s.id == slot.subjectId);
+        if (sIdx == -1) continue;
+
+        final sub = subjects[sIdx];
+        final bool isPractical = slot.slotType == 'practical' || sub.isPracticalOnly;
+        subjects[sIdx] = isPractical
+            ? sub.copyWith(
+                hasPractical: true,
+                practicalTotal: sub.practicalTotal + 1,
+                practicalAttended: sub.practicalAttended + (attended ? 1 : 0),
+              )
+            : sub.copyWith(
+                totalClasses: sub.totalClasses + 1,
+                attendedClasses: sub.attendedClasses + (attended ? 1 : 0),
+              );
+      }
+      ref.read(subjectProvider.notifier).setLocalState(subjects);
+    }
+
+    // 3. Batched background sync
+    unawaited(SupabaseService.respondMultipleSlots(
+      slotIds: slotIds,
+      lectureHappened: lectureHappened,
+      attended: attended,
+    ).catchError((_) {
+      refresh();
+      ref.read(subjectProvider.notifier).refresh();
+    }));
   }
 
   Future<void> update({
@@ -261,14 +490,28 @@ class ResponseNotifier extends StateNotifier<Map<String, Map<String, AttendanceR
     required AttendanceResponse? oldResponse,
     required AttendanceResponse newResponse,
   }) async {
-    await SupabaseService.updateResponse(
+    // 1. Optimistic response update in memory (0ms)
+    final updatedResponses = Map<String, Map<String, AttendanceResponse>>.from(state);
+    if (!updatedResponses.containsKey(date)) {
+      updatedResponses[date] = {};
+    } else {
+      updatedResponses[date] = Map<String, AttendanceResponse>.from(updatedResponses[date]!);
+    }
+    updatedResponses[date]![slotId] = newResponse;
+    state = updatedResponses;
+
+    // 2. Background sync
+    unawaited(SupabaseService.updateResponse(
       date: date,
       slotId: slotId,
       oldResponse: oldResponse,
       newResponse: newResponse,
-    );
-    refresh();
-    ref.read(subjectProvider.notifier).refresh(); // Sync subject stats
+    ).then((_) {
+      ref.read(subjectProvider.notifier).refresh();
+    }).catchError((_) {
+      refresh();
+      ref.read(subjectProvider.notifier).refresh();
+    }));
   }
 }
 

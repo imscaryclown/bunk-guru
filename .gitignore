@@ -68,3 +68,5 @@ test_*.dart
 models.json
 
 
+# Widget Preview related
+.widget_preview/

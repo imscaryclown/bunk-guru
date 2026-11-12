@@ -18,7 +18,8 @@ class MainShell extends ConsumerStatefulWidget {
   ConsumerState<MainShell> createState() => _MainShellState();
 }
 
-class _MainShellState extends ConsumerState<MainShell> with WidgetsBindingObserver {
+class _MainShellState extends ConsumerState<MainShell>
+    with WidgetsBindingObserver {
   late final List<Widget> _screens;
 
   @override
@@ -67,99 +68,153 @@ class _MainShellState extends ConsumerState<MainShell> with WidgetsBindingObserv
       {'icon': Icons.person, 'label': 'PROFILE'},
     ];
 
-    return Scaffold(
-      // Keep screens alive so they don't rebuild their states when switching tabs
-      body: IndexedStack(index: selectedIndex, children: _screens),
-      extendBody:
-          true, // Allows content to scroll underneath the blurred navigation bar
-      bottomNavigationBar: Container(
-        height: 84 + MediaQuery.of(context).padding.bottom,
-        decoration: BoxDecoration(
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(24.0)),
-          boxShadow: [
-            BoxShadow(
-              color: isDark
-                  ? Colors.black.withValues(alpha: 0.4)
-                  : Colors.indigo.withValues(alpha: 0.06),
-              blurRadius: 20,
-              offset: const Offset(0, -4),
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUiOverlayStyle(
+        systemNavigationBarColor: Colors.transparent,
+        systemNavigationBarDividerColor: Colors.transparent,
+        systemNavigationBarIconBrightness: isDark
+            ? Brightness.light
+            : Brightness.dark,
+      ),
+      child: Scaffold(
+        backgroundColor: isDark ? AppColors.bgAppDark : AppColors.bgAppLight,
+        resizeToAvoidBottomInset: false,
+        body: Stack(
+          alignment: Alignment.bottomCenter,
+          children: [
+            // Screens fill entire space and scroll directly underneath the floating pill
+            Positioned.fill(
+              child: IndexedStack(index: selectedIndex, children: _screens),
             ),
-          ],
-        ),
-        clipBehavior: Clip.antiAlias,
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 12.0, sigmaY: 12.0),
-          child: Container(
-            color: isDark
-                ? Colors.black.withValues(alpha: 0.7)
-                : Colors.white.withValues(alpha: 0.85),
-            padding: EdgeInsets.only(
-              bottom: MediaQuery.of(context).padding.bottom + 8,
-              top: 10,
-              left: 12,
-              right: 12,
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: List.generate(items.length, (index) {
-                final item = items[index];
-                final bool isActive = index == selectedIndex;
 
-                return GestureDetector(
-                  onTap: () => _onItemTapped(index),
-                  child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 200),
-                    curve: Curves.easeOutCubic,
-                    padding: EdgeInsets.symmetric(
-                      horizontal: isActive ? 12 : 8,
-                      vertical: 6,
+            // Floating liquid glass pill navbar
+            Positioned(
+              left: 16,
+              right: 16,
+              bottom: MediaQuery.of(context).padding.bottom + 6,
+              child: Container(
+                height: 70,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(40),
+                  boxShadow: [
+                    BoxShadow(
+                      color: isDark
+                          ? Colors.black.withValues(alpha: 0.5)
+                          : Colors.black.withValues(alpha: 0.12),
+                      blurRadius: 28,
+                      spreadRadius: 0,
+                      offset: const Offset(0, 8),
                     ),
-                    decoration: BoxDecoration(
-                      color: isActive
-                          ? (isDark
-                                ? AppColors.primaryDark.withValues(alpha: 0.15)
-                                : AppColors.primaryFixed.withValues(alpha: 0.4))
-                          : Colors.transparent,
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          item['icon'] as IconData,
-                          size: 20,
-                          color: isActive
-                              ? (isDark
-                                    ? AppColors.primaryDark
-                                    : AppColors.primaryLight)
-                              : (isDark
-                                    ? AppColors.outlineDark
-                                    : AppColors.outlineLight),
+                  ],
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(40),
+                  child: BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 20.0, sigmaY: 20.0),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(40),
+                        gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: isDark
+                              ? [
+                                  const Color(
+                                    0xFF1E1E22,
+                                  ).withValues(alpha: 0.85),
+                                  const Color(
+                                    0xFF121214,
+                                  ).withValues(alpha: 0.70),
+                                ]
+                              : [
+                                  Colors.white.withValues(alpha: 0.82),
+                                  Colors.white.withValues(alpha: 0.60),
+                                ],
                         ),
-                        const SizedBox(height: 3),
-                        Text(
-                          item['label'] as String,
-                          style: TextStyle(
-                            fontSize: 8.5,
-                            fontWeight: FontWeight.w500,
-                            letterSpacing: 0.2,
-                            color: isActive
-                                ? (isDark
-                                      ? AppColors.primaryDark
-                                      : AppColors.primaryLight)
-                                : (isDark
-                                      ? AppColors.outlineDark
-                                      : AppColors.outlineLight),
-                          ),
+                        border: Border.all(
+                          color: isDark
+                              ? Colors.white.withValues(alpha: 0.14)
+                              : Colors.white.withValues(alpha: 0.75),
+                          width: 1.2,
                         ),
-                      ],
+                      ),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 6,
+                        vertical: 6,
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: List.generate(items.length, (index) {
+                          final item = items[index];
+                          final bool isActive = index == selectedIndex;
+
+                          return GestureDetector(
+                            onTap: () => _onItemTapped(index),
+                            behavior: HitTestBehavior.opaque,
+                            child: AnimatedContainer(
+                              duration: const Duration(milliseconds: 250),
+                              curve: Curves.easeOutCubic,
+                              padding: EdgeInsets.symmetric(
+                                horizontal: isActive ? 14 : 10,
+                                vertical: 6,
+                              ),
+                              decoration: BoxDecoration(
+                                color: isActive
+                                    ? (isDark
+                                          ? AppColors.primaryDark.withValues(
+                                              alpha: 0.22,
+                                            )
+                                          : AppColors.primaryLight.withValues(
+                                              alpha: 0.12,
+                                            ))
+                                    : Colors.transparent,
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(
+                                    item['icon'] as IconData,
+                                    size: 21,
+                                    color: isActive
+                                        ? (isDark
+                                              ? AppColors.primaryDark
+                                              : AppColors.primaryLight)
+                                        : (isDark
+                                              ? AppColors.outlineDark
+                                              : AppColors.outlineLight),
+                                  ),
+                                  const SizedBox(height: 2),
+                                  Text(
+                                    item['label'] as String,
+                                    style: TextStyle(
+                                      fontSize: 8.5,
+                                      fontWeight: isActive
+                                          ? FontWeight.w600
+                                          : FontWeight.w500,
+                                      letterSpacing: 0.3,
+                                      color: isActive
+                                          ? (isDark
+                                                ? AppColors.primaryDark
+                                                : AppColors.primaryLight)
+                                          : (isDark
+                                                ? AppColors.outlineDark
+                                                : AppColors.outlineLight),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        }),
+                      ),
                     ),
                   ),
-                );
-              }),
+                ),
+              ),
             ),
-          ),
+          ],
         ),
       ),
     );

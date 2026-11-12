@@ -198,7 +198,6 @@ class SupabaseService {
         currentList[idx] = syncedSubject;
         await LocalStorageService.saveSubjects(currentList);
       }
-      await syncFromCloud(true);
       return syncedSubject;
     }
     return newSubject;
@@ -226,7 +225,6 @@ class SupabaseService {
 
     if (isAuthenticated && !id.startsWith('local_')) {
       await client.from('subjects').update(updates).eq('id', id);
-      await syncFromCloud(true);
     }
     return LocalStorageService.getSubjects().firstWhere((s) => s.id == id);
   }
@@ -242,7 +240,6 @@ class SupabaseService {
     if (isAuthenticated && !id.startsWith('local_')) {
       await client.from('schedule_slots').delete().eq('subject_id', id);
       await client.from('subjects').delete().eq('id', id);
-      await syncFromCloud(true);
     }
   }
 
@@ -294,7 +291,6 @@ class SupabaseService {
         currentList[idx] = syncedSlot;
         await LocalStorageService.saveScheduleSlots(currentList);
       }
-      await syncFromCloud(true);
       return syncedSlot;
     }
     return newSlot;
@@ -318,7 +314,6 @@ class SupabaseService {
 
     if (isAuthenticated && !id.startsWith('local_')) {
       await client.from('schedule_slots').update(updates).eq('id', id);
-      await syncFromCloud(true);
     }
     return LocalStorageService.getScheduleSlots().firstWhere((s) => s.id == id);
   }
@@ -329,7 +324,6 @@ class SupabaseService {
 
     if (isAuthenticated && !id.startsWith('local_')) {
       await client.from('schedule_slots').delete().eq('id', id);
-      await syncFromCloud(true);
     }
   }
 
@@ -407,6 +401,111 @@ class SupabaseService {
             'attended_classes': updatedSub.attendedClasses,
           };
           await client.from('subjects').update(updates).eq('id', sub.id);
+        }
+      }
+    }
+  }
+
+  // Batch attendance recording check-ins
+  static Future<void> respondMultipleSlots({
+    required List<String> slotIds,
+    required bool lectureHappened,
+    required bool attended,
+  }) async {
+    if (slotIds.isEmpty) return;
+    final String uid = currentUser?.id ?? 'demo';
+    final String todayKey = _todayKey();
+
+    final Map<String, Map<String, AttendanceResponse>> allResponses = LocalStorageService.getResponses();
+    if (!allResponses.containsKey(todayKey)) allResponses[todayKey] = {};
+
+    final List<Map<String, dynamic>> upsertPayloads = [];
+
+    for (final slotId in slotIds) {
+      final newResp = AttendanceResponse(
+        id: 'local_${Random().nextInt(100000)}',
+        userId: uid,
+        slotId: slotId,
+        date: todayKey,
+        lectureHappened: lectureHappened,
+        attended: attended,
+        createdAt: DateTime.now().toIso8601String(),
+      );
+      allResponses[todayKey]![slotId] = newResp;
+
+      if (isAuthenticated && !slotId.startsWith('local_')) {
+        upsertPayloads.add({
+          'user_id': uid,
+          'slot_id': slotId,
+          'date': todayKey,
+          'lecture_happened': lectureHappened,
+          'attended': attended,
+        });
+      }
+    }
+    await LocalStorageService.saveResponses(allResponses);
+
+    // Save batch to Supabase in a SINGLE upsert call
+    if (isAuthenticated && upsertPayloads.isNotEmpty) {
+      await client.from('attendance_responses').upsert(upsertPayloads);
+    }
+
+    // Update subject counters
+    if (lectureHappened) {
+      final allSlots = LocalStorageService.getScheduleSlots();
+      final subjects = LocalStorageService.getSubjects();
+      final Map<String, Subject> updatedSubjectsMap = {};
+
+      for (final slotId in slotIds) {
+        final slotIdx = allSlots.indexWhere((s) => s.id == slotId);
+        if (slotIdx == -1) continue;
+        final slot = allSlots[slotIdx];
+
+        final sIdx = subjects.indexWhere((s) => s.id == slot.subjectId);
+        if (sIdx == -1) continue;
+
+        final sub = updatedSubjectsMap[slot.subjectId] ?? subjects[sIdx];
+        final bool isPractical = slot.slotType == 'practical' || sub.isPracticalOnly;
+
+        Subject updatedSub;
+        if (isPractical) {
+          updatedSub = sub.copyWith(
+            hasPractical: true,
+            practicalTotal: sub.practicalTotal + 1,
+            practicalAttended: sub.practicalAttended + (attended ? 1 : 0),
+          );
+        } else {
+          updatedSub = sub.copyWith(
+            totalClasses: sub.totalClasses + 1,
+            attendedClasses: sub.attendedClasses + (attended ? 1 : 0),
+          );
+        }
+        updatedSubjectsMap[slot.subjectId] = updatedSub;
+        subjects[sIdx] = updatedSub;
+      }
+
+      await LocalStorageService.saveSubjects(subjects);
+
+      // Update subjects in Supabase in parallel
+      if (isAuthenticated && updatedSubjectsMap.isNotEmpty) {
+        final List<Future<dynamic>> updates = [];
+        for (final entry in updatedSubjectsMap.entries) {
+          if (!entry.key.startsWith('local_')) {
+            final sub = entry.value;
+            final payload = <String, dynamic>{
+              'total_classes': sub.totalClasses,
+              'attended_classes': sub.attendedClasses,
+            };
+            if (sub.hasPractical || sub.isPracticalOnly) {
+              payload['practical_total'] = sub.practicalTotal;
+              payload['practical_attended'] = sub.practicalAttended;
+              payload['has_practical'] = true;
+            }
+            updates.add(client.from('subjects').update(payload).eq('id', entry.key));
+          }
+        }
+        if (updates.isNotEmpty) {
+          await Future.wait(updates);
         }
       }
     }
@@ -522,7 +621,6 @@ class SupabaseService {
       if (avatarUrl != null) updates['avatar_url'] = avatarUrl;
       
       await client.from('profiles').update(updates).eq('id', currentUser!.id);
-      await syncFromCloud(true);
     }
     return prof;
   }
@@ -986,6 +1084,8 @@ class SupabaseService {
   }
 
   // ===== INTERNAL HELPERS =====
+
+  static String todayKey() => _todayKey();
 
   static String _todayKey() {
     final now = DateTime.now();

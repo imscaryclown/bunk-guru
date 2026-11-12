@@ -124,32 +124,29 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(
-                    height: 72,
-                    child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: weekDates.length,
-                      itemBuilder: (context, index) {
-                        final d = weekDates[index];
-                        final bool isActive = index == _selectedDay;
+                  Row(
+                    children: weekDates.map((d) {
+                      final int index = d['dayIndex'] as int;
+                      final bool isActive = index == _selectedDay;
 
-                        return GestureDetector(
+                      return Expanded(
+                        child: GestureDetector(
                           onTap: () {
                             HapticFeedback.selectionClick();
                             setState(() {
-                              _selectedDay = d['dayIndex'] as int;
+                              _selectedDay = index;
                             });
                           },
                           child: Container(
-                            constraints: const BoxConstraints(minWidth: 54),
-                            margin: const EdgeInsets.only(right: 10.0),
+                            height: 68,
+                            margin: const EdgeInsets.symmetric(horizontal: 2.5),
                             decoration: BoxDecoration(
                               color: isActive
                                   ? AppColors.primaryLight
                                   : (isDark
                                         ? Colors.white.withValues(alpha: 0.05)
                                         : AppColors.bgSurfaceLowLight),
-                              borderRadius: BorderRadius.circular(16),
+                              borderRadius: BorderRadius.circular(14),
                               boxShadow: isActive
                                   ? [
                                       BoxShadow(
@@ -167,7 +164,7 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
                                 Text(
                                   d['label'] as String,
                                   style: TextStyle(
-                                    fontSize: 9.5,
+                                    fontSize: 10,
                                     fontWeight: FontWeight.w600,
                                     color: isActive
                                         ? AppColors.primaryFixed
@@ -178,7 +175,7 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
                                 Text(
                                   '${d['date']}',
                                   style: TextStyle(
-                                    fontSize: 18,
+                                    fontSize: 16,
                                     fontWeight: FontWeight.w600,
                                     color: isActive
                                         ? Colors.white
@@ -190,9 +187,9 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
                               ],
                             ),
                           ),
-                        );
-                      },
-                    ),
+                        ),
+                      );
+                    }).toList(),
                   ),
                 ],
               ),
@@ -763,7 +760,10 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
                     color: const Color(0xFF4F46E5),
                     onTap: () async {
                       if (selectedSubjectId.isEmpty) return;
-                      await ref
+                      if (mounted) {
+                        Navigator.pop(context);
+                      }
+                      ref
                           .read(scheduleProvider.notifier)
                           .add(
                             subjectId: selectedSubjectId,
@@ -773,9 +773,6 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
                             slotType: selectedType,
                             room: roomController.text.trim(),
                           );
-                      if (mounted) {
-                        Navigator.pop(context);
-                      }
                     },
                     child: const Text(
                       'ADD SLOT',
@@ -1075,12 +1072,12 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
                             );
 
                             if (confirmDel == true) {
-                              await ref
-                                  .read(scheduleProvider.notifier)
-                                  .delete(slot.id);
                               if (mounted) {
                                 Navigator.pop(context);
                               }
+                              ref
+                                  .read(scheduleProvider.notifier)
+                                  .delete(slot.id);
                             }
                           },
                           child: const Text(
@@ -1099,7 +1096,10 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
                         child: CustomButton(
                           color: const Color(0xFF4F46E5),
                           onTap: () async {
-                            await ref
+                            if (mounted) {
+                              Navigator.pop(context);
+                            }
+                            ref
                                 .read(scheduleProvider.notifier)
                                 .update(slot.id, {
                                   'subject_id': selectedSubjectId,
@@ -1109,9 +1109,6 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
                                   'slot_type': selectedType,
                                   'room': roomController.text.trim(),
                                 });
-                            if (mounted) {
-                              Navigator.pop(context);
-                            }
                           },
                           child: const Text(
                             'SAVE CHANGES',

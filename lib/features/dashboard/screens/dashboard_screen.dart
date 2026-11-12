@@ -170,9 +170,11 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
             } catch (_) {}
           },
           child: ListView(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 20.0,
-              vertical: 16.0,
+            padding: EdgeInsets.fromLTRB(
+              20.0,
+              16.0,
+              20.0,
+              120.0 + MediaQuery.of(context).padding.bottom,
             ),
             children: [
               if (pendingSlots.isNotEmpty) ...[
@@ -1069,9 +1071,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                               ? Colors.white.withValues(alpha: 0.12)
                               : const Color(0xFFCBD5E1),
                         ),
-                        onTap: () async {
+                        onTap: () {
                           final slotIds = pending.map((s) => s.id).toList();
-                          await ref
+                          ref
                               .read(responseProvider.notifier)
                               .respondMultiple(
                                 slotIds: slotIds,
@@ -1123,9 +1125,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                         border: Border.all(
                           color: AppColors.redBg.withValues(alpha: 0.25),
                         ),
-                        onTap: () async {
+                        onTap: () {
                           final slotIds = pending.map((s) => s.id).toList();
-                          await ref
+                          ref
                               .read(responseProvider.notifier)
                               .respondMultiple(
                                 slotIds: slotIds,
@@ -1173,9 +1175,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                         border: Border.all(
                           color: const Color(0xFF22C55E).withValues(alpha: 0.25),
                         ),
-                        onTap: () async {
+                        onTap: () {
                           final slotIds = pending.map((s) => s.id).toList();
-                          await ref
+                          ref
                               .read(responseProvider.notifier)
                               .respondMultiple(
                                 slotIds: slotIds,
@@ -1328,8 +1330,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                             vertical: 9,
                             horizontal: 4,
                           ),
-                          onTap: () async {
-                            await ref
+                          onTap: () {
+                            ref
                                 .read(responseProvider.notifier)
                                 .respond(
                                   slotId: slot.id,
@@ -1374,8 +1376,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                             vertical: 9,
                             horizontal: 4,
                           ),
-                          onTap: () async {
-                            await ref
+                          onTap: () {
+                            ref
                                 .read(responseProvider.notifier)
                                 .respond(
                                   slotId: slot.id,
@@ -1417,8 +1419,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                             vertical: 9,
                             horizontal: 4,
                           ),
-                          onTap: () async {
-                            await ref
+                          onTap: () {
+                            ref
                                 .read(responseProvider.notifier)
                                 .respond(
                                   slotId: slot.id,

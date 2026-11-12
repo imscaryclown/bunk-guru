@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'dart:math';
 import 'package:flutter/foundation.dart';
@@ -36,9 +37,13 @@ class Persona {
 }
 
 class NotificationService {
-  static final FlutterLocalNotificationsPlugin _plugin = FlutterLocalNotificationsPlugin();
+  static final FlutterLocalNotificationsPlugin _plugin =
+      FlutterLocalNotificationsPlugin();
   static bool _initialized = false;
-  static bool _exactAlarmGranted = false;
+
+  /// Debounce timer for scheduleAll() — prevents rapid cancel/re-schedule storms
+  /// when the user taps attendance multiple times quickly.
+  static Timer? _scheduleDebounce;
 
   // ===== PERSONAS DATABASE =====
   static final Map<String, Persona> personas = {
@@ -263,7 +268,9 @@ class NotificationService {
     // Safely configure local timezone
     try {
       final dynamic tzInfo = await FlutterTimezone.getLocalTimezone();
-      final String timeZoneName = tzInfo is String ? tzInfo : (tzInfo.identifier?.toString() ?? 'Asia/Kolkata');
+      final String timeZoneName = tzInfo is String
+          ? tzInfo
+          : (tzInfo.identifier?.toString() ?? 'Asia/Kolkata');
       tz.setLocalLocation(tz.getLocation(timeZoneName));
     } catch (_) {
       try {
@@ -278,23 +285,25 @@ class NotificationService {
 
     const DarwinInitializationSettings initializationSettingsDarwin =
         DarwinInitializationSettings(
-      requestAlertPermission: true,
-      requestBadgePermission: true,
-      requestSoundPermission: true,
-    );
+          requestAlertPermission: true,
+          requestBadgePermission: true,
+          requestSoundPermission: true,
+        );
 
-    const InitializationSettings initializationSettings = InitializationSettings(
-      android: initializationSettingsAndroid,
-      iOS: initializationSettingsDarwin,
-    );
+    const InitializationSettings initializationSettings =
+        InitializationSettings(
+          android: initializationSettingsAndroid,
+          iOS: initializationSettingsDarwin,
+        );
 
     await _plugin.initialize(initializationSettings);
 
     // Create Notification Channels for Android
     if (Platform.isAndroid) {
-      final AndroidFlutterLocalNotificationsPlugin? androidPlugin =
-          _plugin.resolvePlatformSpecificImplementation<
-              AndroidFlutterLocalNotificationsPlugin>();
+      final AndroidFlutterLocalNotificationsPlugin? androidPlugin = _plugin
+          .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin
+          >();
 
       if (androidPlugin != null) {
         await androidPlugin.createNotificationChannel(
@@ -339,25 +348,32 @@ class NotificationService {
   // ===== PERMISSION GATES =====
   static Future<bool> requestPermission() async {
     if (Platform.isAndroid) {
-      final AndroidFlutterLocalNotificationsPlugin? androidPlugin =
-          _plugin.resolvePlatformSpecificImplementation<
-              AndroidFlutterLocalNotificationsPlugin>();
+      final AndroidFlutterLocalNotificationsPlugin? androidPlugin = _plugin
+          .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin
+          >();
       if (androidPlugin != null) {
         // Request POST_NOTIFICATIONS permission (Android 13+)
-        final bool? granted = await androidPlugin.requestNotificationsPermission();
+        final bool? granted = await androidPlugin
+            .requestNotificationsPermission();
         if (granted != true) return false;
 
-        // Request exact alarm permission (Android 12+)
-        // Without this, zonedSchedule with exactAllowWhileIdle silently fails
+        // Request SCHEDULE_EXACT_ALARM permission (Android 12+).
+        // Unlike USE_EXACT_ALARM, this requires a runtime request.
+        // If not granted we fall back to inexact scheduling automatically.
         try {
-          final bool? exactAlarmGranted = await androidPlugin.requestExactAlarmsPermission();
-          _exactAlarmGranted = exactAlarmGranted == true;
-          if (!_exactAlarmGranted) {
-            debugPrint('NotificationService: Exact alarm permission not granted, will use inexact scheduling');
+          final bool? exactGranted = await androidPlugin
+              .requestExactAlarmsPermission();
+          if (exactGranted != true) {
+            debugPrint(
+              'NotificationService: Exact alarm permission not granted — '
+              'will fall back to inexact scheduling.',
+            );
           }
         } catch (e) {
-          _exactAlarmGranted = false;
-          debugPrint('NotificationService: requestExactAlarmsPermission error: $e');
+          debugPrint(
+            'NotificationService: requestExactAlarmsPermission error: $e',
+          );
         }
 
         return true;
@@ -365,12 +381,9 @@ class NotificationService {
     } else if (Platform.isIOS) {
       final bool? granted = await _plugin
           .resolvePlatformSpecificImplementation<
-              IOSFlutterLocalNotificationsPlugin>()
-          ?.requestPermissions(
-            alert: true,
-            badge: true,
-            sound: true,
-          );
+            IOSFlutterLocalNotificationsPlugin
+          >()
+          ?.requestPermissions(alert: true, badge: true, sound: true);
       return granted ?? false;
     }
     return true;
@@ -381,7 +394,8 @@ class NotificationService {
     await init();
     await requestPermission();
 
-    final String activePersonaId = personaId ?? LocalStorageService.notificationPersona;
+    final String activePersonaId =
+        personaId ?? LocalStorageService.notificationPersona;
     final Persona persona = personas[activePersonaId] ?? personas['chapri']!;
 
     final String? body = _generateMessage(
@@ -398,21 +412,21 @@ class NotificationService {
 
     const AndroidNotificationDetails androidPlatformChannelSpecifics =
         AndroidNotificationDetails(
-      'bunk_guru_reminders',
-      'Class Reminders',
-      channelDescription: 'Meme-worthy reminders before your classes',
-      importance: Importance.high,
-      priority: Priority.high,
-      playSound: true,
-      enableVibration: true,
-    );
+          'bunk_guru_reminders',
+          'Class Reminders',
+          channelDescription: 'Meme-worthy reminders before your classes',
+          importance: Importance.high,
+          priority: Priority.high,
+          playSound: true,
+          enableVibration: true,
+        );
 
     const DarwinNotificationDetails iOSPlatformChannelSpecifics =
         DarwinNotificationDetails(
-      presentAlert: true,
-      presentBadge: true,
-      presentSound: true,
-    );
+          presentAlert: true,
+          presentBadge: true,
+          presentSound: true,
+        );
 
     const NotificationDetails platformChannelSpecifics = NotificationDetails(
       android: androidPlatformChannelSpecifics,
@@ -445,7 +459,9 @@ class NotificationService {
       if (parts.isEmpty || parts[0].isEmpty) return null;
 
       int hour = int.parse(parts[0]);
-      int minute = parts.length > 1 && parts[1].isNotEmpty ? int.parse(parts[1]) : 0;
+      int minute = parts.length > 1 && parts[1].isNotEmpty
+          ? int.parse(parts[1])
+          : 0;
 
       if (isPM && hour < 12) {
         hour += 12;
@@ -461,26 +477,54 @@ class NotificationService {
   }
 
   // ===== SCHEDULER ENGINE =====
-  static Future<void> scheduleAll() async {
+
+  /// Debounced entry point — coalesces rapid-fire calls (e.g. multiple
+  /// attendance taps) into a single cancel-and-reschedule cycle.
+  static Future<void> scheduleAll() {
+    _scheduleDebounce?.cancel();
+
+    // If there's an in-flight schedule run, let it finish before we start
+    // another one.  The Completer lets callers await the eventual result.
+    final completer = Completer<void>();
+    _scheduleDebounce = Timer(const Duration(milliseconds: 600), () async {
+      try {
+        await _scheduleAllInternal();
+        completer.complete();
+      } catch (e) {
+        completer.completeError(e);
+      }
+    });
+    return completer.future;
+  }
+
+  /// The actual scheduling logic — must only be called via [scheduleAll].
+  static Future<void> _scheduleAllInternal() async {
     try {
       // CRITICAL: Ensure plugin is initialized before scheduling.
       // If init() failed at app startup (swallowed by try-catch in main.dart),
       // _plugin won't be initialized and all zonedSchedule calls will silently fail.
       if (!_initialized) {
-        debugPrint('NotificationService: Plugin not initialized, calling init()...');
+        debugPrint(
+          'NotificationService: Plugin not initialized, calling init()...',
+        );
         await init();
       }
 
       if (!LocalStorageService.isNotificationEnabled) {
-        debugPrint('NotificationService: Notifications disabled, skipping scheduleAll');
+        debugPrint(
+          'NotificationService: Notifications disabled, skipping scheduleAll',
+        );
         return;
       }
 
       final List<Subject> subjects = LocalStorageService.getSubjects();
-      final List<ScheduleSlot> schedule = LocalStorageService.getScheduleSlots();
+      final List<ScheduleSlot> schedule =
+          LocalStorageService.getScheduleSlots();
 
       if (subjects.isEmpty || schedule.isEmpty) {
-        debugPrint('NotificationService: No data to schedule — subjects: ${subjects.length}, slots: ${schedule.length}');
+        debugPrint(
+          'NotificationService: No data to schedule — subjects: ${subjects.length}, slots: ${schedule.length}',
+        );
         return;
       }
 
@@ -503,15 +547,19 @@ class NotificationService {
       // Schedule class reminders for next 7 days
       for (int dayOffset = 0; dayOffset < 7; dayOffset++) {
         final DateTime targetDate = now.add(Duration(days: dayOffset));
-        final int targetDayOfWeek = (targetDate.weekday - 1) % 7; // 0 = Monday, 6 = Sunday
+        final int targetDayOfWeek =
+            (targetDate.weekday - 1) % 7; // 0 = Monday, 6 = Sunday
 
         // Filter slots that occur on targetDayOfWeek
-        final List<ScheduleSlot> daySlots =
-            schedule.where((s) => s.dayOfWeek == targetDayOfWeek).toList();
+        final List<ScheduleSlot> daySlots = schedule
+            .where((s) => s.dayOfWeek == targetDayOfWeek)
+            .toList();
 
         for (final slot in daySlots) {
           try {
-            final subjectIdx = subjects.indexWhere((s) => s.id == slot.subjectId);
+            final subjectIdx = subjects.indexWhere(
+              (s) => s.id == slot.subjectId,
+            );
             if (subjectIdx == -1) {
               skippedNoSubject++;
               continue;
@@ -522,7 +570,9 @@ class NotificationService {
             final parsedTime = _parseTimeString(slot.time);
             if (parsedTime == null) {
               skippedParseFail++;
-              debugPrint('NotificationService: Failed to parse time "${slot.time}" for ${subject.name}');
+              debugPrint(
+                'NotificationService: Failed to parse time "${slot.time}" for ${subject.name}',
+              );
               continue;
             }
             final int hour = parsedTime.$1;
@@ -536,9 +586,10 @@ class NotificationService {
               minute,
             );
 
-            // Schedule reminder 15 minutes before the class
-            final DateTime reminderDateTime =
-                slotDateTime.subtract(const Duration(minutes: 15));
+            // Schedule reminder 5 minutes before the class
+            final DateTime reminderDateTime = slotDateTime.subtract(
+              const Duration(minutes: 5),
+            );
 
             // Skip reminders in the past
             if (reminderDateTime.isBefore(now)) {
@@ -549,13 +600,18 @@ class NotificationService {
             // Calculate math values
             final int totalA = subject.isPracticalOnly
                 ? subject.practicalAttended
-                : (subject.attendedClasses + (subject.hasPractical ? subject.practicalAttended : 0));
+                : (subject.attendedClasses +
+                      (subject.hasPractical ? subject.practicalAttended : 0));
             final int totalT = subject.isPracticalOnly
                 ? subject.practicalTotal
-                : (subject.totalClasses + (subject.hasPractical ? subject.practicalTotal : 0));
+                : (subject.totalClasses +
+                      (subject.hasPractical ? subject.practicalTotal : 0));
 
             final double pct = AttendanceMath.currentPercent(totalA, totalT);
-            final AttendanceStatus status = AttendanceMath.getStatus(totalA, totalT);
+            final AttendanceStatus status = AttendanceMath.getStatus(
+              totalA,
+              totalT,
+            );
             final int bunksLeft = AttendanceMath.safeBunks(totalA, totalT);
             final int needed = AttendanceMath.requiredClasses(totalA, totalT);
 
@@ -585,8 +641,10 @@ class NotificationService {
             );
 
             if (body != null) {
-              final tz.TZDateTime scheduledTZDate =
-                  tz.TZDateTime.from(reminderDateTime, tz.local);
+              final tz.TZDateTime scheduledTZDate = tz.TZDateTime.from(
+                reminderDateTime,
+                tz.local,
+              );
 
               final int currentId = idCounter++;
               final bool scheduled = await _scheduleNotification(
@@ -602,7 +660,9 @@ class NotificationService {
               if (scheduled) scheduledCount++;
             }
           } catch (slotError) {
-            debugPrint('NotificationService: Error scheduling for slot ${slot.id}: $slotError');
+            debugPrint(
+              'NotificationService: Error scheduling for slot ${slot.id}: $slotError',
+            );
           }
         }
       }
@@ -623,8 +683,9 @@ class NotificationService {
             if (morningTime.isBefore(now)) continue;
 
             final int targetDayOfWeek = (targetDate.weekday - 1) % 7;
-            final List<ScheduleSlot> daySlots =
-                schedule.where((s) => s.dayOfWeek == targetDayOfWeek).toList();
+            final List<ScheduleSlot> daySlots = schedule
+                .where((s) => s.dayOfWeek == targetDayOfWeek)
+                .toList();
 
             // Skip if no classes scheduled today
             if (daySlots.isEmpty) continue;
@@ -637,8 +698,10 @@ class NotificationService {
             );
 
             if (body != null) {
-              final tz.TZDateTime scheduledTZDate =
-                  tz.TZDateTime.from(morningTime, tz.local);
+              final tz.TZDateTime scheduledTZDate = tz.TZDateTime.from(
+                morningTime,
+                tz.local,
+              );
 
               final int currentMorningId = idCounter++;
               final bool scheduled = await _scheduleNotification(
@@ -654,18 +717,24 @@ class NotificationService {
               if (scheduled) scheduledCount++;
             }
           } catch (morningError) {
-            debugPrint('NotificationService: Error scheduling morning briefing for dayOffset $dayOffset: $morningError');
+            debugPrint(
+              'NotificationService: Error scheduling morning briefing for dayOffset $dayOffset: $morningError',
+            );
           }
         }
       }
 
-      debugPrint('NotificationService: scheduleAll complete — '
-          'scheduled: $scheduledCount, '
-          'skippedPast: $skippedPast, '
-          'skippedParseFail: $skippedParseFail, '
-          'skippedNoSubject: $skippedNoSubject');
+      debugPrint(
+        'NotificationService: scheduleAll complete — '
+        'scheduled: $scheduledCount, '
+        'skippedPast: $skippedPast, '
+        'skippedParseFail: $skippedParseFail, '
+        'skippedNoSubject: $skippedNoSubject',
+      );
     } catch (globalError) {
-      debugPrint('NotificationService: CRITICAL global error in scheduleAll: $globalError');
+      debugPrint(
+        'NotificationService: CRITICAL global error in scheduleAll: $globalError',
+      );
     }
   }
 
@@ -685,7 +754,9 @@ class NotificationService {
         channelId,
         channelName,
         channelDescription: channelDesc,
-        importance: highPriority ? Importance.high : Importance.defaultImportance,
+        importance: highPriority
+            ? Importance.high
+            : Importance.defaultImportance,
         priority: highPriority ? Priority.high : Priority.defaultPriority,
       ),
       iOS: const DarwinNotificationDetails(
@@ -694,12 +765,24 @@ class NotificationService {
       ),
     );
 
-    // Use exact scheduling only when we know the permission was granted.
-    // On Android 12+, using exactAllowWhileIdle without the permission
-    // causes zonedSchedule to silently do nothing on many OEMs.
-    final AndroidScheduleMode scheduleMode = _exactAlarmGranted
-        ? AndroidScheduleMode.exactAllowWhileIdle
-        : AndroidScheduleMode.inexactAllowWhileIdle;
+    // Check if exact alarm permission is granted; if not, use inexact.
+    AndroidScheduleMode scheduleMode =
+        AndroidScheduleMode.inexactAllowWhileIdle;
+    if (Platform.isAndroid) {
+      try {
+        final AndroidFlutterLocalNotificationsPlugin? androidPlugin = _plugin
+            .resolvePlatformSpecificImplementation<
+              AndroidFlutterLocalNotificationsPlugin
+            >();
+        final bool? canExact = await androidPlugin
+            ?.canScheduleExactNotifications();
+        if (canExact == true) {
+          scheduleMode = AndroidScheduleMode.exactAllowWhileIdle;
+        }
+      } catch (_) {
+        // Fall through to inexact
+      }
+    }
 
     try {
       await _plugin.zonedSchedule(
@@ -714,28 +797,26 @@ class NotificationService {
       );
       return true;
     } catch (e) {
-      debugPrint('NotificationService: zonedSchedule failed (id=$id, mode=$scheduleMode): $e');
-      // If exact failed, try inexact as a last resort
-      if (scheduleMode == AndroidScheduleMode.exactAllowWhileIdle) {
-        try {
-          await _plugin.zonedSchedule(
-            id,
-            title,
-            body,
-            scheduledDate,
-            notificationDetails,
-            uiLocalNotificationDateInterpretation:
-                UILocalNotificationDateInterpretation.absoluteTime,
-            androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
-          );
-          _exactAlarmGranted = false; // Remember for future calls in this session
-          return true;
-        } catch (fallbackError) {
-          debugPrint('NotificationService: BOTH exact and inexact scheduling failed (id=$id): $fallbackError');
-          return false;
-        }
+      debugPrint('NotificationService: zonedSchedule failed (id=$id): $e');
+      // If exact scheduling somehow fails, try inexact as a last resort
+      try {
+        await _plugin.zonedSchedule(
+          id,
+          title,
+          body,
+          scheduledDate,
+          notificationDetails,
+          uiLocalNotificationDateInterpretation:
+              UILocalNotificationDateInterpretation.absoluteTime,
+          androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
+        );
+        return true;
+      } catch (fallbackError) {
+        debugPrint(
+          'NotificationService: BOTH exact and inexact scheduling failed (id=$id): $fallbackError',
+        );
+        return false;
       }
-      return false;
     }
   }
 
@@ -817,11 +898,12 @@ class NotificationService {
         LocalStorageService.getResponses();
     final List<String> sortedDates = allResponses.keys.toList()
       ..sort((a, b) => b.compareTo(a)); // Sort in reverse chronological order
-    
+
     int streak = 0;
 
     for (final date in sortedDates) {
-      final Map<String, AttendanceResponse> dayResponses = allResponses[date] ?? {};
+      final Map<String, AttendanceResponse> dayResponses =
+          allResponses[date] ?? {};
       if (dayResponses.isEmpty) continue;
 
       // Check if all lectures that happened on that day were attended

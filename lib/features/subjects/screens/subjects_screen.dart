@@ -622,7 +622,11 @@ class _SubjectsScreenState extends ConsumerState<SubjectsScreen> {
                       final name = nameController.text.trim();
                       if (name.isEmpty) return;
 
-                      await ref
+                      if (mounted) {
+                        Navigator.pop(context);
+                      }
+
+                      ref
                           .read(subjectProvider.notifier)
                           .add(
                             name: name,
@@ -654,10 +658,6 @@ class _SubjectsScreenState extends ConsumerState<SubjectsScreen> {
                                   : practicalAttendedController.text,
                             ),
                           );
-
-                      if (mounted) {
-                        Navigator.pop(context);
-                      }
                     },
                     child: const Text(
                       'ADD SUBJECT',
@@ -1115,12 +1115,12 @@ class _SubjectsScreenState extends ConsumerState<SubjectsScreen> {
                             );
 
                             if (confirmDel == true) {
-                              await ref
-                                  .read(subjectProvider.notifier)
-                                  .delete(s.id);
                               if (mounted) {
                                 Navigator.pop(context);
                               }
+                              ref
+                                  .read(subjectProvider.notifier)
+                                  .delete(s.id);
                             }
                           },
                           child: const Text(
@@ -1142,7 +1142,11 @@ class _SubjectsScreenState extends ConsumerState<SubjectsScreen> {
                             final name = nameController.text.trim();
                             if (name.isEmpty) return;
 
-                            await ref
+                            if (mounted) {
+                              Navigator.pop(context);
+                            }
+
+                            ref
                                 .read(subjectProvider.notifier)
                                 .update(s.id, {
                                   'name': name,
@@ -1158,10 +1162,6 @@ class _SubjectsScreenState extends ConsumerState<SubjectsScreen> {
                                   'icon': s.icon,
                                   'color': s.color,
                                 });
-
-                            if (mounted) {
-                              Navigator.pop(context);
-                            }
                           },
                           child: const Text(
                             'SAVE CHANGES',

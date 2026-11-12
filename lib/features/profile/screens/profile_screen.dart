@@ -871,7 +871,12 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
+          padding: EdgeInsets.fromLTRB(
+            20.0,
+            16.0,
+            20.0,
+            120.0 + MediaQuery.of(context).padding.bottom,
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

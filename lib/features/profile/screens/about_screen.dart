@@ -151,7 +151,7 @@ class AboutScreen extends StatelessWidget {
                         ),
                         const SizedBox(width: 4),
                         Text(
-                          'v1.0.7',
+                          'v1.0.8',
                           style: GoogleFonts.inter(
                             fontSize: 10,
                             fontWeight: FontWeight.w600,
@@ -384,7 +384,7 @@ class AboutScreen extends StatelessWidget {
 
             // FOOTER SECTION
             Text(
-              'Bunk Guru v1.0.0',
+              'Bunk Guru v1.0.8',
               style: TextStyle(
                 fontSize: 11,
                 color: isDark ? Colors.white30 : Colors.black38,
