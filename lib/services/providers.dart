@@ -413,6 +413,12 @@ class ResponseNotifier extends StateNotifier<Map<String, Map<String, AttendanceR
       refresh();
       ref.read(subjectProvider.notifier).refresh();
     }));
+
+    // 4. Reschedule notifications — attendance changed, so danger/safe
+    //    levels and persona messages need to be recalculated.
+    if (LocalStorageService.isNotificationEnabled) {
+      NotificationService.scheduleAll();
+    }
   }
 
   Future<void> respondMultiple({
@@ -482,6 +488,12 @@ class ResponseNotifier extends StateNotifier<Map<String, Map<String, AttendanceR
       refresh();
       ref.read(subjectProvider.notifier).refresh();
     }));
+
+    // 4. Reschedule notifications — attendance changed, so danger/safe
+    //    levels and persona messages need to be recalculated.
+    if (LocalStorageService.isNotificationEnabled) {
+      NotificationService.scheduleAll();
+    }
   }
 
   Future<void> update({

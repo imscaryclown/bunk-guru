@@ -334,13 +334,14 @@ class NotificationService {
 
     // Reschedule if enabled — but first ensure we have OS-level permission.
     // Without this, zonedSchedule silently does nothing on Android 13+.
+    // NOTE: Do NOT call scheduleAll() here — it would recurse back into init()
+    // via _scheduleAllInternal(). Instead, request permission only; callers
+    // (main.dart, rescheduleIfNeeded) will trigger scheduleAll() separately.
     if (LocalStorageService.isNotificationEnabled) {
       try {
         await requestPermission();
-        await scheduleAll();
       } catch (e) {
-        // Suppress and log error to avoid locking up application startup
-        debugPrint('NotificationService: Failed to reschedule on startup: $e');
+        debugPrint('NotificationService: Failed to request permission on startup: $e');
       }
     }
   }
@@ -405,12 +406,14 @@ class NotificationService {
       pct: '76.5',
       bunksLeft: 3,
       needed: 2,
-      time: 15,
+      time: 5,
       streak: 4,
       totalToday: 4,
     );
 
-    const AndroidNotificationDetails androidPlatformChannelSpecifics =
+    final String title = '${persona.icon} 📚 Data Structures in 5 Mins';
+
+    final AndroidNotificationDetails androidPlatformChannelSpecifics =
         AndroidNotificationDetails(
           'bunk_guru_reminders',
           'Class Reminders',
@@ -419,6 +422,10 @@ class NotificationService {
           priority: Priority.high,
           playSound: true,
           enableVibration: true,
+          styleInformation: BigTextStyleInformation(
+            body ?? 'Class in 5 min!',
+            contentTitle: title,
+          ),
         );
 
     const DarwinNotificationDetails iOSPlatformChannelSpecifics =
@@ -428,15 +435,15 @@ class NotificationService {
           presentSound: true,
         );
 
-    const NotificationDetails platformChannelSpecifics = NotificationDetails(
+    final NotificationDetails platformChannelSpecifics = NotificationDetails(
       android: androidPlatformChannelSpecifics,
       iOS: iOSPlatformChannelSpecifics,
     );
 
     await _plugin.show(
       9999,
-      '${persona.icon} 📚 Data Structures in 15m',
-      body ?? 'Sharma ji ka beta already seated. Class in 15 min!',
+      title,
+      body ?? 'Class in 5 min!',
       platformChannelSpecifics,
     );
   }
@@ -449,12 +456,14 @@ class NotificationService {
   // ===== TIME PARSER HELPER =====
   static (int, int)? _parseTimeString(String timeStr) {
     try {
-      final clean = timeStr.trim().toLowerCase();
-      final bool isPM = clean.contains('pm');
-      final bool isAM = clean.contains('am');
+      // Take only the start time if a range like "09:30 AM - 10:30 AM" is stored
+      final startPart =
+          timeStr.split(RegExp(r'[-–—]+')).first.trim().toLowerCase();
+      final bool isPM = startPart.contains('pm');
+      final bool isAM = startPart.contains('am');
 
       // Strip any non-digit/colon characters
-      final digitsColonOnly = clean.replaceAll(RegExp(r'[^0-9:]'), '');
+      final digitsColonOnly = startPart.replaceAll(RegExp(r'[^0-9:]'), '');
       final parts = digitsColonOnly.split(':');
       if (parts.isEmpty || parts[0].isEmpty) return null;
 
@@ -635,7 +644,7 @@ class NotificationService {
               pct: pct.toStringAsFixed(1),
               bunksLeft: bunksLeft,
               needed: needed,
-              time: 15,
+              time: 5,
               streak: streak,
               totalToday: daySlots.length,
             );
@@ -649,7 +658,7 @@ class NotificationService {
               final int currentId = idCounter++;
               final bool scheduled = await _scheduleNotification(
                 id: currentId,
-                title: '📚 ${subject.name}',
+                title: '📚 ${subject.name} in 5 Mins',
                 body: body,
                 scheduledDate: scheduledTZDate,
                 channelId: 'bunk_guru_reminders',
@@ -758,6 +767,10 @@ class NotificationService {
             ? Importance.high
             : Importance.defaultImportance,
         priority: highPriority ? Priority.high : Priority.defaultPriority,
+        styleInformation: BigTextStyleInformation(
+          body,
+          contentTitle: title,
+        ),
       ),
       iOS: const DarwinNotificationDetails(
         presentAlert: true,
@@ -840,7 +853,7 @@ class NotificationService {
           pct: '76.5',
           bunksLeft: 3,
           needed: 2,
-          time: 15,
+          time: 5,
           streak: 4,
           totalToday: 4,
         ) ??

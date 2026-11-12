@@ -44,6 +44,11 @@ void main() async {
 
   try {
     await NotificationService.init();
+    // Schedule notifications after init (init no longer calls scheduleAll
+    // itself to avoid recursive re-entry)
+    if (LocalStorageService.isNotificationEnabled) {
+      await NotificationService.scheduleAll();
+    }
   } catch (e) {
     debugPrint('Critical Error: NotificationService init failed: $e');
   }

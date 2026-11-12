@@ -1729,7 +1729,7 @@ class _NotificationPrefsSheetState
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   const Text(
-                                    '📚 DATA STRUCTURES · 15 MIN',
+                                    '📚 DATA STRUCTURES IN 5 MINS',
                                     style: TextStyle(
                                       fontSize: 9,
                                       fontWeight: FontWeight.w600,
